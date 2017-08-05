@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- 继承父类POM -->
+	<parent>
+		<groupId>org.evergreen</groupId>
+		<artifactId>evergreen-parent</artifactId>
+		<version>1.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<!-- 子模块名称 -->
+	<artifactId>evergreen-aop</artifactId>
+	<!-- 打包方式 -->
+	<packaging>jar</packaging>
+
+	<!-- 配置依赖 -->
+	<dependencies>
+		<!-- 由于父类使用的dependencyManagement来管理依赖配置，
+		 所以这里不能直接继承junit，需要手动继承，
+		 因此这里只需要配置相应的groupId和artifactId即可，
+		 其他参数可以不用配置-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+		</dependency>
+	</dependencies>
+
+</project>

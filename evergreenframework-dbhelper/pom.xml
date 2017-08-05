@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- 继承父类POM -->
+	<parent>
+		<groupId>org.evergreen</groupId>
+		<artifactId>evergreen-parent</artifactId>
+		<version>1.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<!-- 子模块名称 -->
+	<artifactId>evergreen-dbhelper</artifactId>
+	<!-- 打包方式-->
+	<packaging>jar</packaging>
+
+	<!-- 配置依赖 -->
+	<dependencies>
+		<!-- mysql driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.25</version>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>
