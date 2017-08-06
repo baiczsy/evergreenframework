@@ -2,7 +2,9 @@ package org.evergreen.web;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.evergreen.web.params.ParamInfo;
 
@@ -18,6 +20,15 @@ public class ActionDefinition {
 	 */
 	public final static String DEFINITION = "definition";
 	/**
+	 * Action Class
+	 */
+	private Class<?> actionClass;
+
+	/**
+	 * Action Method
+	 */
+	private Method method;
+	/**
 	 * controller uri
 	 */
 	private String controllerUrl = "";
@@ -28,17 +39,7 @@ public class ActionDefinition {
 	/**
 	 * requestMethods
 	 */
-	private List<String> requestMethods = new ArrayList<String>();
-
-	/**
-	 * Action Class
-	 */
-	private Class<?> actionClass;
-
-	/**
-	 * Action Method
-	 */
-	private Method method;
+	private Set<String> requestMethods = new HashSet<String>();
 
 	/**
 	 * 封装Action方法中所有参数的名字和类型
@@ -57,12 +58,8 @@ public class ActionDefinition {
 		this.actionUrl = actionUrl;
 	}
 
-	public List<String> getRequestMethods() {
+	public Set<String> getRequestMethods() {
 		return requestMethods;
-	}
-
-	public void setRequestMethods(List<String> requestMethods) {
-		this.requestMethods = requestMethods;
 	}
 
 	public Class<?> getActionClass() {

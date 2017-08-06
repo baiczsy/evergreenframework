@@ -20,7 +20,6 @@ public class ActionMapper {
 	/**
 	 * Action返回的试图结果集
 	 */
-	private Object result;
 
 	public Object getTarget() {
 		return target;
@@ -36,14 +35,6 @@ public class ActionMapper {
 
 	public void setParams(Object[] params) {
 		this.params = params;
-	}
-
-	public Object getResult() {
-		return result;
-	}
-
-	public void setResult(Object result) {
-		this.result = result;
 	}
 
 	public ActionDefinition getDefinition() {

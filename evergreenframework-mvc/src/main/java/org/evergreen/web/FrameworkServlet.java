@@ -21,6 +21,7 @@ import org.evergreen.web.factory.WebApplicationFactory;
 import org.evergreen.web.handler.DefaultHandlerInvoker;
 import org.evergreen.web.handler.DefaultHandlerMapping;
 import org.evergreen.web.params.ParamInfo;
+import org.evergreen.web.utils.CollectionUtils;
 import org.evergreen.web.utils.ParamNameUtil;
 import org.evergreen.web.utils.ScanUtil;
 import org.evergreen.web.utils.StringUtils;
@@ -257,22 +258,11 @@ public abstract class FrameworkServlet extends HttpServlet {
 			definition.setActionClass(method.getDeclaringClass());
 			definition.setParamInfo(resolveParams(method));
 			// 添加Action能支持的请求方法
-			setRequestMethods(definition.getRequestMethods(), requestMethods);
-			setRequestMethods(definition.getRequestMethods(),
-					annotation.method());
+			definition.getRequestMethods().addAll(CollectionUtils.arrayToList(requestMethods));
+			definition.getRequestMethods().addAll(CollectionUtils.arrayToList(annotation.method()));
 			return definition;
 		}
 		return null;
-	}
-
-	/**
-	 * 为当前Action记录能支持的请求方法
-	 */
-	private void setRequestMethods(List<String> list, String[] requestMethods) {
-		for (String value : requestMethods) {
-			if (list.indexOf(value) == -1)
-				list.add(value);
-		}
 	}
 
 	/**

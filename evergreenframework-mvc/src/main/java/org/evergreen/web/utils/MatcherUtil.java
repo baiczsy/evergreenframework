@@ -1,6 +1,6 @@
 package org.evergreen.web.utils;
 
-import java.util.List;
+import java.util.Set;
 
 public class MatcherUtil {
 
@@ -22,10 +22,17 @@ public class MatcherUtil {
 	 * 
 	 * @return
 	 */
-	public static boolean requestMethodMatch(List<String> requestMethods,
+	public static boolean requestMethodMatch(Set<String> requestMethods,
 			String requestMethod) {
-		return requestMethods.size() == 0
-				|| requestMethods.indexOf(requestMethod) != -1 ? true : false;
+		if(requestMethods.size() == 0){
+			return true;
+		}
+		for (String rm : requestMethods) {
+			if(rm.equals(requestMethod)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

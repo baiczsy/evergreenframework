@@ -47,7 +47,6 @@ public class DefaultHandlerMapping implements HandlerMapping {
     private List<ActionDefinition> getActionDefinitions(){
         HttpServletRequest request = (HttpServletRequest) ActionContext
                 .getContext().get(FrameworkServlet.REQUEST);
-        @SuppressWarnings("unchecked")
         List<ActionDefinition> definitions = (List<ActionDefinition>) request
                 .getServletContext().getAttribute(ActionDefinition.DEFINITION);
         return definitions;
