@@ -179,7 +179,7 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 * 否则action实例将由框架中的WebApplicationFactory来构建实例
 	 */
 	private void initActionFactory(ServletContext servletContext) {
-		String actionFactoryName = servletContext.getInitParameter("plugin");
+		String actionFactoryName = servletContext.getInitParameter("actionFactory");
 		// 目标Action回调处理器
 		try {
 			ActionFactory actionFactory = (actionFactoryName != null) ? (ActionFactory) Class
