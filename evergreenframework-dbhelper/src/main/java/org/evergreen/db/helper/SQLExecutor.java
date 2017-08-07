@@ -14,15 +14,15 @@ public class SQLExecutor {
 
     private Connection connection;
 
-    private boolean closeConn = true;
+    private boolean autoClose = true;
 
     public SQLExecutor(Connection connection) {
         this.connection = connection;
     }
 
-    public SQLExecutor(Connection connection, boolean closeConn) {
+    public SQLExecutor(Connection connection, boolean autoClose) {
         this.connection = connection;
-        this.closeConn = closeConn;
+        this.autoClose = autoClose;
     }
 
     public Connection getConnection() {
@@ -66,7 +66,7 @@ public class SQLExecutor {
         } finally {
             close(rs);
             close(ps);
-            if (closeConn) {
+            if (autoClose) {
                 close();
             }
         }
@@ -100,7 +100,7 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            if (closeConn) {
+            if (autoClose) {
                 close();
             }
         }
@@ -139,7 +139,7 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            if (closeConn) {
+            if (autoClose) {
                 close();
             }
         }
@@ -182,7 +182,7 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            if (closeConn) {
+            if (autoClose) {
                 close();
             }
         }
@@ -228,7 +228,7 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            if (closeConn) {
+            if (autoClose) {
                 close();
             }
         }
