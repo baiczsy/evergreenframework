@@ -25,7 +25,7 @@ public class RowProcessor {
 		Object value = rs.getObject(columnIndex);
 		if(value != null){
 			String columnName = rs.getMetaData().getColumnLabel(columnIndex);
-			value = BeanUtil.processColumn(rs, columnName, type);
+			value = ColumnUtil.columnConvert(rs, columnName, type);
 		}
 		return (T) value;
 	}

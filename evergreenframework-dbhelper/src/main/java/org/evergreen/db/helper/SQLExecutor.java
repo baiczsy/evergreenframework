@@ -12,20 +12,20 @@ import java.util.List;
  */
 public class SQLExecutor {
 
-    Connection connection;
+    private Connection connection;
 
-    public SQLExecutor() {
-    }
+    private boolean closeConn = true;
 
     public SQLExecutor(Connection connection) {
         this.connection = connection;
     }
 
-    public void setConnection(Connection connection) {
+    public SQLExecutor(Connection connection, boolean closeConn) {
         this.connection = connection;
+        this.closeConn = closeConn;
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 
@@ -66,7 +66,9 @@ public class SQLExecutor {
         } finally {
             close(rs);
             close(ps);
-            close();
+            if (closeConn) {
+                close();
+            }
         }
         return t;
     }
@@ -98,7 +100,9 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            close();
+            if (closeConn) {
+                close();
+            }
         }
         return i;
     }
@@ -135,7 +139,9 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            close();
+            if (closeConn) {
+                close();
+            }
         }
         return rows;
     }
@@ -169,14 +175,16 @@ public class SQLExecutor {
             setParameters(ps, params);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()){
+            if (rs.next()) {
                 generatedKey = rs.getObject(1);
             }
         } catch (SQLException e) {
             rethrow(e);
         } finally {
             close(ps);
-            close();
+            if (closeConn) {
+                close();
+            }
         }
         return generatedKey;
     }
@@ -212,7 +220,7 @@ public class SQLExecutor {
             }
             ps.executeBatch();
             ResultSet rs = ps.getGeneratedKeys();
-            while(rs.next()){
+            while (rs.next()) {
                 generatedKeys.add(rs.getObject(1));
             }
         } catch (SQLException e) {
@@ -220,7 +228,9 @@ public class SQLExecutor {
             rethrow(e);
         } finally {
             close(ps);
-            close();
+            if (closeConn) {
+                close();
+            }
         }
         return generatedKeys.toArray();
     }
@@ -236,57 +246,6 @@ public class SQLExecutor {
             throws SQLException {
         for (int i = 0; i < params.length; i++) {
             ps.setObject(i + 1, params[i]);
-        }
-    }
-
-    /**
-     * 开启事务
-     */
-    public void beginTransaction() {
-        try {
-            if (connection != null && connection.getAutoCommit()) {
-                connection.setAutoCommit(false);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 提交事务
-     */
-    public void commit() {
-        try {
-            if (connection != null && !connection.getAutoCommit()) {
-                connection.commit();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(connection != null)
-                    connection.close();
-            } catch(SQLException e) {
-            }
-        }
-    }
-
-    /**
-     * 事务回滚
-     */
-    public void rollback() {
-        try {
-            if (connection != null) {
-                connection.rollback();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(connection != null)
-                    connection.close();
-            } catch(SQLException e) {
-            }
         }
     }
 
@@ -319,14 +278,14 @@ public class SQLExecutor {
     /**
      * 关闭连接
      */
-    private void close() {
+    public void close() {
         try {
-            if (connection != null && connection.getAutoCommit()) {
+            if (connection != null && !connection.isClosed()) {
                 connection.close();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
-
     }
 
     /**
@@ -335,7 +294,7 @@ public class SQLExecutor {
     private void rethrow(SQLException cause)
             throws SQLException {
         String msg = cause.getMessage() == null ? "" : cause.getMessage();
-        SQLException e = new SQLException(msg, cause.getSQLState(),cause.getErrorCode());
+        SQLException e = new SQLException(msg, cause.getSQLState(), cause.getErrorCode());
         e.setNextException(cause);
         throw e;
     }
