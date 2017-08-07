@@ -84,16 +84,6 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 */
 	public final static String ACTION_FACTORY = "org.evergreen.web.actionFactory";
 
-	/**
-	 * 请求映射处理器
-	 */
-	protected HandlerMapping handlerMapping;
-
-	/**
-	 * Action回调处理器
-	 */
-	protected HandlerInvoker handlerInvoker;
-
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -103,10 +93,6 @@ public abstract class FrameworkServlet extends HttpServlet {
 		initActionDefinitions(config);
 		// 初始化action工厂
 		initActionFactory(config.getServletContext());
-		// 初始化映射处理器
-		initHandlerMapping();
-		// 初始化action回调处理器
-		initHandlerInvoker();
 		// 初始化线程池
 		initAsyncThreadPool(config.getServletContext());
 	}
@@ -140,20 +126,6 @@ public abstract class FrameworkServlet extends HttpServlet {
 						"Please set the 'defaultServletName' property explicitly.");
 			}
 		}
-	}
-
-	/**
-	 * 初始化请求映射处理器
-	 */
-	private void initHandlerMapping(){
-		handlerMapping = new DefaultHandlerMapping();
-	}
-
-	/**
-	 * 初始化Action回调处理器
-	 */
-	private void initHandlerInvoker(){
-		handlerInvoker = new DefaultHandlerInvoker();
 	}
 
 	/**

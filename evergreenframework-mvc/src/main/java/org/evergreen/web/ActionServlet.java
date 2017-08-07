@@ -3,11 +3,14 @@ package org.evergreen.web;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.evergreen.web.exception.ActionException;
+import org.evergreen.web.handler.DefaultHandlerInvoker;
+import org.evergreen.web.handler.DefaultHandlerMapping;
 import org.evergreen.web.view.DefaultViewResult;
 
 /**
@@ -19,6 +22,39 @@ public class ActionServlet extends FrameworkServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 789342728181721564L;
+
+	/**
+	 * 请求映射处理器
+	 */
+	private HandlerMapping handlerMapping;
+
+	/**
+	 * Action回调处理器
+	 */
+	private HandlerInvoker handlerInvoker;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		// 初始化映射处理器
+		initHandlerMapping();
+		// 初始化action回调处理器
+		initHandlerInvoker();
+	}
+
+	/**
+	 * 初始化请求映射处理器
+	 */
+	private void initHandlerMapping(){
+		handlerMapping = new DefaultHandlerMapping();
+	}
+
+	/**
+	 * 初始化Action回调处理器
+	 */
+	private void initHandlerInvoker(){
+		handlerInvoker = new DefaultHandlerInvoker();
+	}
 
 	/**
 	 * 核心入口
@@ -39,20 +75,16 @@ public class ActionServlet extends FrameworkServlet {
 				// 响应视图
 				response(viewResult);
 				// 清除ActionContext的本地线程副本
-				cleanActionContext();
+				destroyActionContext();
 			}
-		} catch(IOException e) {
-			e.printStackTrace();
-			throw e;
 		} catch(Throwable e) {
 			e.printStackTrace();
 			rethrowError(e);
-			throw new ServletException(e.getMessage());
 		}
 	}
 
 	/**
-	 * 初始化contextMap对象
+	 * 当不同的请求到达时，为每一个请求初始化相应的ActionContext实例
 	 *
 	 * @param request
 	 * @param response
@@ -99,7 +131,7 @@ public class ActionServlet extends FrameworkServlet {
 	 * @param e
 	 * @throws IOException
 	 */
-	private void rethrowError(Throwable e) {
+	private void rethrowError(Throwable e) throws ServletException {
 		HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(FrameworkServlet.RESPONSE);
 		if(e instanceof ActionException){
 			try {
@@ -108,13 +140,16 @@ public class ActionServlet extends FrameworkServlet {
 				e1.printStackTrace();
 			}
 		}
+		throw new ServletException(e.getMessage());
 	}
 
 	/**
 	 * 清除ActionContext的本地线程副本
      */
-	private void cleanActionContext(){
+	private void destroyActionContext(){
 		ActionContext.localContext.remove();
 	}
+
+
 
 }
