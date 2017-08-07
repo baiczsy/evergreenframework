@@ -14,7 +14,7 @@ import java.util.List;
 public class DefaultHandlerMapping implements HandlerMapping {
     @Override
     public ActionMapper handler() throws Exception {
-        ActionMapper mapping = new ActionMapper();
+        ActionMapper mapper = new ActionMapper();
         HttpServletRequest request = (HttpServletRequest) ActionContext
                 .getContext().get(FrameworkServlet.REQUEST);
         String urlPattern = UrlPatternUtil.getUrlPattern(request);
@@ -30,14 +30,14 @@ public class DefaultHandlerMapping implements HandlerMapping {
                     // 将请求url和匹配的url放入当前请求作用域,用于后面做restful参数映射
                     saveRestPath(actionDefinition.getUrlPattern(), urlPattern);
                     //将definition对象封装到ActionMapping中并返回
-                    mapping.setDefinition(actionDefinition);
+                    mapper.setDefinition(actionDefinition);
                 }
             }
         }
         if(isRequestUri && !isRequestMethod){
             throw new RequestMethodException(request.getMethod());
         }
-        return mapping;
+        return mapper;
     }
 
 
