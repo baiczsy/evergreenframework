@@ -40,7 +40,6 @@ public class DefaultHandlerMapping implements HandlerMapping {
         return mapper;
     }
 
-
     /**
      * 获取所有的Action描述定义
      */
