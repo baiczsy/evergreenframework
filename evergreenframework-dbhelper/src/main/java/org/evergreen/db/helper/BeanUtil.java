@@ -69,7 +69,7 @@ public class BeanUtil {
         PropertyDescriptor[] propertyDescriptors = beanInfo
                 .getPropertyDescriptors();
         for (PropertyDescriptor pd : propertyDescriptors) {
-            //type = pd.getReadMethod().getDeclaringClass();
+            type = pd.getReadMethod().getDeclaringClass();
             String fieldName = pd.getName();
             Field field = type.getDeclaredField(fieldName);
             fieldName = (field.isAnnotationPresent(Column.class)) ? field.getAnnotation(Column.class)
