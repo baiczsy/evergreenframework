@@ -28,7 +28,7 @@ public class ColumnUtil {
         if (propType.equals(String.class)) {
             value = rs.getString(columnName);
 
-        } else if(propType.isEnum()){
+        } else if(value instanceof String && propType.isEnum()){
             value = Enum.valueOf(propType, rs.getString(columnName));
 
         } else if (propType.equals(Integer.TYPE)
