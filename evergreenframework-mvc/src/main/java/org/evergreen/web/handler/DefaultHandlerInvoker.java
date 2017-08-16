@@ -12,7 +12,7 @@ import java.util.Map;
 public class DefaultHandlerInvoker implements HandlerInvoker{
 
     @Override
-    public ViewResult invoke(ActionMapper mapper) throws Throwable {
+    public Object invoke(ActionMapper mapper) throws Throwable {
         getAction(mapper);
         paramsConvert(mapper);
         validateParams(mapper);
@@ -61,10 +61,10 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
      * 回调Action方法
      * @param mapper
      */
-    private ViewResult invokeMethod(ActionMapper mapper) throws Throwable{
-        Object viewResult = null;
+    private Object invokeMethod(ActionMapper mapper) throws Throwable{
+        Object viewObject = null;
         try {
-            viewResult = mapper.getDefinition().getMethod()
+            viewObject = mapper.getDefinition().getMethod()
                     .invoke(mapper.getTarget(), mapper.getParams());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
             }
             e.printStackTrace();
         }
-        return (ViewResult) viewResult;
+        return viewObject;
     }
 
 }

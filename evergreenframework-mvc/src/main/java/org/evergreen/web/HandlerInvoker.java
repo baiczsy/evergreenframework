@@ -5,5 +5,5 @@ package org.evergreen.web;
  */
 public interface HandlerInvoker {
 
-    ViewResult invoke(ActionMapper mapper) throws Throwable;
+    Object invoke(ActionMapper mapper) throws Throwable;
 }
