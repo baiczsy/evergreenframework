@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 默认的Action回到处理器
+ * 默认的Action回调处理器
  */
 public class DefaultHandlerMapping implements HandlerMapping {
     @Override
