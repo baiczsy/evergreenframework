@@ -34,11 +34,6 @@ public abstract class FrameworkServlet extends HttpServlet {
 	protected final static String THREAD_POOL = "org.evergreen.web.ServletBean.threadPool";
 
 	/**
-	 * 扫描参数,固定值为scan
-	 */
-	final static String SCAN_PATH = "packageName";
-
-	/**
 	 * 用于存放所有Action的描述信息
 	 */
 	final List<ActionDefinition> definitionList = new ArrayList<ActionDefinition>();
