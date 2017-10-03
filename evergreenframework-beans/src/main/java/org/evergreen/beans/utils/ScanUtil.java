@@ -22,15 +22,9 @@ public class ScanUtil {
 	 * @param packageName 包名
 	 * @return 所有的完整类名
 	 */
-	/**
-	 * 获取指定包下以及子包中所有的类
-	 *
-	 * @param packageName 包名
-	 * @return 所有的完整类名
-	 */
 	public static Set<String> scan(String packageName) {
-		if(packageName == null || "".equals(packageName.trim())){
-			throw new RuntimeException("The path can not be null or a '' string.");
+		if(packageName == null){
+			throw new RuntimeException("The path can not be null.");
 		}
 		String packagePath = packageName.replace(".", "/");
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
