@@ -1,8 +1,12 @@
 package org.evergreen.beans.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * class扫描工具
@@ -10,7 +14,7 @@ import java.util.*;
  */
 public class ScanUtil {
 
-	private static final List<String> classNames = new ArrayList<String>();
+	private static final Set<String> classNames = new HashSet<String>();
 
 	/**
 	 * 获取指定包下以及子包中所有的类
@@ -18,13 +22,32 @@ public class ScanUtil {
 	 * @param packageName 包名
 	 * @return 所有的完整类名
 	 */
-	public static List<String> scan(String packageName) {
-		packageName = packageName == null ? "" : packageName.trim();
+	/**
+	 * 获取指定包下以及子包中所有的类
+	 *
+	 * @param packageName 包名
+	 * @return 所有的完整类名
+	 */
+	public static Set<String> scan(String packageName) {
+		if(packageName == null || "".equals(packageName.trim())){
+			throw new RuntimeException("The path can not be null or a '' string.");
+		}
 		String packagePath = packageName.replace(".", "/");
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		URL url = loader.getResource(packagePath);
-		if (url != null) {
-			scanFromDir(url.getPath(), packageName);
+		try {
+			Enumeration<URL> urls = loader.getResources(packagePath);
+			while(urls.hasMoreElements()){
+				URL url= urls.nextElement();
+				if("file".equals(url.getProtocol())){
+					scanFromDir(url.getPath(), packageName);
+				}
+				if("jar".equals(url.getProtocol())){
+					JarURLConnection connection = (JarURLConnection)url.openConnection();
+					scanFromJar(connection.getJarFile());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return classNames;
 	}
@@ -54,9 +77,25 @@ public class ScanUtil {
 		}
 	}
 
+	/**
+	 * 扫描jar文件
+	 * @param jarFile
+	 * @throws IOException
+	 */
+	private static void scanFromJar(JarFile jarFile) throws IOException {
+		Enumeration<JarEntry> files = jarFile.entries();
+		while (files.hasMoreElements()) {
+			JarEntry entry = files.nextElement();
+			if (entry.getName().endsWith(".class")){
+				String className = entry.getName().replace("/", ".").replace(".class", "");
+				classNames.add(className);
+			}
+		}
+	}
+
 
 	public static void main(String[] args) throws Exception {
-		List<String> classNames = scan("");
+		Set<String> classNames = scan("org.evergreen");
 		for (String className : classNames) {
 			System.out.println(className);
 		}

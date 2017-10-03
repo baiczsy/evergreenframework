@@ -18,11 +18,11 @@ public class EvergreenContainerFactory extends ContainerFactory {
 
 	public Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException {
-		BeanFactory factory = (BeanFactory) getServletContext().getAttribute(
-				BEAN_FACTORY);
 		if (definition == null) {
 			throw new RequestMappingException();
 		}
+		BeanFactory factory = (BeanFactory) getServletContext().getAttribute(
+				BEAN_FACTORY);
 		Method method = definition.getMethod();
 		if (method != null)
 			try {

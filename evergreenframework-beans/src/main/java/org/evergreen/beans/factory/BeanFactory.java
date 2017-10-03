@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,7 +42,7 @@ public abstract class BeanFactory {
      */
     public BeanFactory(String path) {
         try {
-            List<String> classNames = ScanUtil.scan(path);
+            Set<String> classNames = ScanUtil.scan(path);
             initDefinitionMap(classNames);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -55,7 +56,7 @@ public abstract class BeanFactory {
      *
      * @throws ClassNotFoundException, BeanDefinitionException
      */
-    private void initDefinitionMap(List<String> classNames) throws ClassNotFoundException, BeanDefinitionException {
+    private void initDefinitionMap(Set<String> classNames) throws ClassNotFoundException, BeanDefinitionException {
         for (String className : classNames) {
             Class<?> beanClass = Class.forName(className);
             if (beanClass.isAnnotationPresent(Component.class)) {

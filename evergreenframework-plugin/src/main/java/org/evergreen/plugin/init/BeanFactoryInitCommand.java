@@ -19,8 +19,7 @@ public class BeanFactoryInitCommand implements InitCommand{
 	 */
 	public void execute(ServletContext servletContext) {
 		if (servletContext.getAttribute(EvergreenContainerFactory.BEAN_FACTORY) == null) {
-			String path = servletContext.getInitParameter("scan");
-			path = path == null ? "" : path;
+			String path = servletContext.getInitParameter("scanPackage");
 			BeanFactory factory = new AnnotationContextFactory(path);
 			servletContext.setAttribute(EvergreenContainerFactory.BEAN_FACTORY, factory);
 		}	

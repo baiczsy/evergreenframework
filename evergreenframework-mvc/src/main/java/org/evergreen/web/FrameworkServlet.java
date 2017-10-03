@@ -36,7 +36,7 @@ public abstract class FrameworkServlet extends HttpServlet {
 	/**
 	 * 扫描参数,固定值为scan
 	 */
-	final static String SCAN_PATH = "scan";
+	final static String SCAN_PATH = "packageName";
 
 	/**
 	 * 用于存放所有Action的描述信息
@@ -132,7 +132,7 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 * @param config
 	 */
 	private void initActionDefinitions(ServletConfig config) {
-		// 初始化所有类名
+		// 从ActionServlet的init参数中获取扫描路径
 		String scanPath = config.getInitParameter(SCAN_PATH);
 		// 根据路径解析出所有Action的完整类名
 		List<String> classesName = ScanUtil.scan((scanPath == null) ? "" : scanPath);

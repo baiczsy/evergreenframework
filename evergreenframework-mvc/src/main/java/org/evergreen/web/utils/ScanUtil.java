@@ -19,12 +19,11 @@ public class ScanUtil {
 	 * @return 所有的完整类名
 	 */
 	public static List<String> scan(String packageName) {
-		packageName = packageName == null ? "" : packageName.trim();
 		String packagePath = packageName.replace(".", "/");
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		URL url = loader.getResource(packagePath);
 		if (url != null) {
-			scanFromDir(url.getPath(), packageName);
+			scanPackage(url.getPath(), packageName);
 		}
 		return classNames;
 	}
@@ -35,12 +34,12 @@ public class ScanUtil {
 	 * @param filePath 文件目录
 	 * @param packageName 包名
 	 */
-	private static void scanFromDir(String filePath, String packageName) {
+	private static void scanPackage(String filePath, String packageName) {
 		File[] files = new File(filePath).listFiles();
 		packageName = packageName + ".";
 		for (File childFile : files) {
 			if (childFile.isDirectory()) {
-				scanFromDir(childFile.getPath(), packageName + childFile.getName());
+				scanPackage(childFile.getPath(), packageName + childFile.getName());
 			} else {
 				String fileName = childFile.getName();
 				if (fileName.endsWith(".class")) {

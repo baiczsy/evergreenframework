@@ -11,6 +11,6 @@ import org.evergreen.web.exception.ActionException;
  */
 public interface ActionFactory {
 
-	public Object crateAction(ActionDefinition definition)
+	Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException;
 }
