@@ -13,17 +13,14 @@ public class ScanUtil {
 	private static final List<String> classNames = new ArrayList<String>();
 
 	/**
-	 * 获取指定包下以及子包中所有的类
+	 * 获取包下以及子包中所有的完整类名
 	 *
-	 * @param packageName 包名
 	 * @return 所有的完整类名
 	 */
-	public static List<String> scan(String packageName) {
-		String packagePath = packageName.replace(".", "/");
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		URL url = loader.getResource(packagePath);
+	public static List<String> scanPackage() {
+		URL url = Thread.currentThread().getContextClassLoader().getResource("");
 		if (url != null) {
-			scanPackage(url.getPath(), packageName);
+			scanPackage(url.getPath(), "");
 		}
 		return classNames;
 	}
@@ -55,7 +52,7 @@ public class ScanUtil {
 
 
 	public static void main(String[] args) throws Exception {
-		List<String> classNames = scan("");
+		List<String> classNames = scanPackage();
 		for (String className : classNames) {
 			System.out.println(className);
 		}

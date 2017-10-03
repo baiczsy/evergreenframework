@@ -132,10 +132,8 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 * @param config
 	 */
 	private void initActionDefinitions(ServletConfig config) {
-		// 从ActionServlet的init参数中获取扫描路径
-		String scanPath = config.getInitParameter(SCAN_PATH);
 		// 根据路径解析出所有Action的完整类名
-		List<String> classesName = ScanUtil.scan((scanPath == null) ? "" : scanPath);
+		List<String> classesName = ScanUtil.scanPackage();
 		// 初始化所有Action的描述定义
 		initDefinitionList(classesName);
 		// 将所有描述存入上下文
