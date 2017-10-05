@@ -1,4 +1,4 @@
-package org.evergreen.plugin;
+package org.evergreen.plugin.utils;
 
 public class BeanNameUtil {
 

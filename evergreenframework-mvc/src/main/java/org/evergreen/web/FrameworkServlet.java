@@ -142,7 +142,7 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 * 否则action实例将由框架中的WebApplicationFactory来构建实例
 	 */
 	private void initActionFactory(ServletContext servletContext) {
-		String actionFactoryName = servletContext.getInitParameter("actionFactory");
+		/*String actionFactoryName = servletContext.getInitParameter("actionFactory");
 		// 目标Action回调处理器
 		try {
 			ActionFactory actionFactory = (actionFactoryName != null) ? (ActionFactory) Class
@@ -152,6 +152,10 @@ public abstract class FrameworkServlet extends HttpServlet {
 					actionFactory);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		*/
+		if(servletContext.getAttribute(FrameworkServlet.ACTION_FACTORY) == null){
+			servletContext.setAttribute(FrameworkServlet.ACTION_FACTORY, new WebApplicationFactory());
 		}
 	}
 

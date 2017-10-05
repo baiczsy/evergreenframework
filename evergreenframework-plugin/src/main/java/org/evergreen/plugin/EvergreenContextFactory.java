@@ -1,32 +1,39 @@
-package org.evergreen.plugin.factory;
+package org.evergreen.plugin;
+
+import org.evergreen.beans.annotation.Component;
+import org.evergreen.beans.factory.BeanFactory;
+import org.evergreen.plugin.utils.BeanNameUtil;
+import org.evergreen.web.ActionDefinition;
+import org.evergreen.web.ActionFactory;
+import org.evergreen.web.exception.ActionException;
+import org.evergreen.web.exception.RequestMappingException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import org.evergreen.beans.annotation.Component;
-import org.evergreen.beans.factory.BeanFactory;
-import org.evergreen.plugin.ContainerFactory;
-import org.evergreen.plugin.BeanContainerException;
-import org.evergreen.plugin.BeanNameUtil;
-import org.evergreen.web.ActionDefinition;
-import org.evergreen.web.exception.ActionException;
-import org.evergreen.web.exception.RequestMappingException;
+public class EvergreenContextFactory implements ActionFactory {
 
-public class EvergreenContainerFactory extends ContainerFactory {
-	
-	public static final String BEAN_FACTORY = "org.evergreen.container.factory";
+	private BeanFactory beanFactory;
+
+	public EvergreenContextFactory(BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+	}
+
+	public BeanFactory getBeanFactory() {
+		return beanFactory;
+	}
 
 	public Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException {
 		if (definition == null) {
 			throw new RequestMappingException();
 		}
-		BeanFactory factory = (BeanFactory) getServletContext().getAttribute(
-				BEAN_FACTORY);
+		/*BeanFactory factory = (BeanFactory) getServletContext().getAttribute(
+				BEAN_FACTORY);*/
 		Method method = definition.getMethod();
 		if (method != null)
 			try {
-				return factory.getBean(getBeanName(method));
+				return beanFactory.getBean(getBeanName(method));
 			} catch (BeanContainerException e) {
 				e.printStackTrace();
 				throw new RequestMappingException();
