@@ -35,20 +35,6 @@
 			<version>1.2.1.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		<!--<dependency>
-			<groupId>org.evergreen</groupId>
-			<artifactId>evergreen-aop</artifactId>
-			<version>1.2.1.RELEASE</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.evergreen</groupId>
-			<artifactId>evergreen-dbhelper</artifactId>
-			<version>1.2.1.RELEASE</version>
-			<scope>provided</scope>
-		</dependency>-->
 	</dependencies>
 
 </project>
