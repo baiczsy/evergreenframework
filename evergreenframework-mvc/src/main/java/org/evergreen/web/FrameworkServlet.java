@@ -142,9 +142,8 @@ public abstract class FrameworkServlet extends HttpServlet {
 	 * 否则action实例将由框架中的WebApplicationFactory来构建
 	 */
 	private void initActionFactory(ServletContext servletContext) {
-		if(servletContext.getAttribute(FrameworkServlet.ACTION_FACTORY) == null){
-			servletContext.setAttribute(FrameworkServlet.ACTION_FACTORY, new WebApplicationFactory());
-		}
+		ActionFactoryContext actionFactoryContext = new ActionFactoryContext(servletContext);
+		actionFactoryContext.initAttribute();
 	}
 
 	/**
