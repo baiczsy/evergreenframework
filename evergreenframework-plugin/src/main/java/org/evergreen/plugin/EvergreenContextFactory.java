@@ -28,8 +28,6 @@ public class EvergreenContextFactory implements ActionFactory {
 		if (definition == null) {
 			throw new RequestMappingException();
 		}
-		/*BeanFactory factory = (BeanFactory) getServletContext().getAttribute(
-				BEAN_FACTORY);*/
 		Method method = definition.getMethod();
 		if (method != null)
 			try {
