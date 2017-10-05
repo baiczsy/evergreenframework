@@ -138,8 +138,8 @@ public abstract class FrameworkServlet extends HttpServlet {
 
 	/**
 	 * 初始化Action工厂，用于构建Action实例
-	 * 如果配置了容器插件工厂,则初始化插件,那么action实例将从容器工厂中获取
-	 * 否则action实例将由框架中的WebApplicationFactory来构建实例
+	 * 如果使用了IOC容器,那么action实例将从IOC容器中获取
+	 * 否则action实例将由框架中的WebApplicationFactory来构建
 	 */
 	private void initActionFactory(ServletContext servletContext) {
 		if(servletContext.getAttribute(FrameworkServlet.ACTION_FACTORY) == null){
