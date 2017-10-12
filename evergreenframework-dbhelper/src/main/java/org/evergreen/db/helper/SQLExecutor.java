@@ -20,11 +20,6 @@ public class SQLExecutor {
         this.connection = connection;
     }
 
-    public SQLExecutor(Connection connection, boolean autoClose) {
-        this.connection = connection;
-        this.autoClose = autoClose;
-    }
-
     public Connection getConnection() {
         return connection;
     }
@@ -250,6 +245,41 @@ public class SQLExecutor {
     }
 
     /**
+     * 开启事务
+     */
+    public void beginTranstaction() {
+        try {
+            autoClose = false;
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 提交事务
+     */
+    public void commit() {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
+    public void rollback() {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
+    /**
      * 关闭结果集
      *
      * @param rs
@@ -278,7 +308,7 @@ public class SQLExecutor {
     /**
      * 关闭连接
      */
-    public void close() {
+    private void close() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
