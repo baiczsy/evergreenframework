@@ -314,7 +314,6 @@ public class SQLExecutor {
                 connection.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
