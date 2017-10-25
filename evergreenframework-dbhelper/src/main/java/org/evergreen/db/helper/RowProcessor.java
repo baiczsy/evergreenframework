@@ -20,7 +20,7 @@ public class RowProcessor {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static <T> T toColumnValue(ResultSet rs, int columnIndex, Class<T> type)
+	public static <T> T toValue(ResultSet rs, int columnIndex, Class<T> type)
 			throws SQLException {
 		Object value = rs.getObject(columnIndex);
 		if(value != null){

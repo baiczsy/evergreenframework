@@ -18,7 +18,7 @@ public class ColumnHandler<T> implements ResultSetHandler<T> {
 
     @SuppressWarnings("unchecked")
     public T handle(ResultSet rs) throws SQLException {
-        return rs.next() ? RowProcessor.toColumnValue(rs, columnIndex, type)
+        return rs.next() ? RowProcessor.toValue(rs, columnIndex, type)
                 : null;
     }
 
