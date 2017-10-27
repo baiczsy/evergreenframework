@@ -22,12 +22,12 @@ public class Json extends ViewResult {
 		json = JsonUtil.toJson(arg, format);
 	}
 
-	public Json(Object arg, String[] keys) {
-		json = JsonUtil.toJson(arg, keys);
+	public Json(Object arg, String[] excludeFields) {
+		json = JsonUtil.toJson(arg, excludeFields);
 	}
 
-	public Json(Object arg, String[] keys, String format) {
-		json = JsonUtil.toJson(arg, keys, format);
+	public Json(Object arg, String[] excludeFields, String format) {
+		json = JsonUtil.toJson(arg, excludeFields, format);
 	}
 
 	protected void execute() throws IOException {
