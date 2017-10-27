@@ -10,7 +10,9 @@ import java.util.*;
  */
 public class ScanUtil {
 
-	private static final List<String> classNames = new ArrayList<String>();
+	private static List<String> classNames = new ArrayList<String>();
+
+	private final static String DEFAULT_PATH = "";
 
 	/**
 	 * 获取包下以及子包中所有的完整类名
@@ -18,9 +20,9 @@ public class ScanUtil {
 	 * @return 所有的完整类名
 	 */
 	public static List<String> scanPackage() {
-		URL url = Thread.currentThread().getContextClassLoader().getResource("");
+		URL url = Thread.currentThread().getContextClassLoader().getResource(DEFAULT_PATH);
 		if (url != null) {
-			scanPackage(url.getPath(), "");
+			scanPackage(url.getPath(), DEFAULT_PATH);
 		}
 		return classNames;
 	}
