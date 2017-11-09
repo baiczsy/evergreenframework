@@ -60,7 +60,7 @@ public class ActionContext {
 	 * @return
 	 */
 	public Map<String, Object> getRequest(){
-		return (Map<String, Object>) contextMap.get(FrameworkServlet.REQUEST_MAP);
+		return (Map<String, Object>) get(FrameworkServlet.REQUEST_MAP);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ActionContext {
 	 * @return
 	 */
 	public Map<String, Object> getSession() {
-		return (Map<String, Object>) contextMap.get(FrameworkServlet.SESSION_MAP);
+		return (Map<String, Object>) get(FrameworkServlet.SESSION_MAP);
 	}
 
 	/**
@@ -76,8 +76,7 @@ public class ActionContext {
 	 * @return
 	 */
 	public Map<String, Object> getApplication() {
-		return (Map<String, Object>) contextMap
-				.get(FrameworkServlet.APPLICATION_MAP);
+		return (Map<String, Object>) get(FrameworkServlet.APPLICATION_MAP);
 	}
 
 	/**
