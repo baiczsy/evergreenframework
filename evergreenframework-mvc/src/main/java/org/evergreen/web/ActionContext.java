@@ -140,9 +140,10 @@ public class ActionContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getErrors() {
-		if (get(ERRORS) == null)
+		if (getRequest().get(ERRORS) == null) {
 			getRequest().put(ERRORS, new HashMap<String, String>());
-		return (Map<String, String>) get(ERRORS);
+		}
+		return (Map<String, String>) getRequest().get(ERRORS);
 	}
 
 	/**
