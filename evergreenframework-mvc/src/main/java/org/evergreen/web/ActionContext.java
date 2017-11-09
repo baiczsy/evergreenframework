@@ -130,7 +130,7 @@ public class ActionContext {
 	 * @return
 	 */
 	public boolean hasErrors() {
-		return (get(ERRORS) != null) ? true : false;
+		return (getRequest().get(ERRORS) != null) ? true : false;
 	}
 
 	/**

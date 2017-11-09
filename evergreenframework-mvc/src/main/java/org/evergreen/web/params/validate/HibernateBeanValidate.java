@@ -30,7 +30,8 @@ public class HibernateBeanValidate implements ParamsValidate {
 				.getParameterAnnotations();
 		for (int i = 0; i < paramAmmotations.length; i++) {
 			for (int j = 0; j < paramAmmotations[i].length; j++) {
-				if (paramAmmotations[i][j].annotationType() == Validate.class) {
+				if (paramAmmotations[i][j].annotationType().equals(Validate.class)) {
+					System.out.println("....validate");
 					Set<ConstraintViolation<Object>> info = validate(
 							mapping.getParams()[i], paramAmmotations[i][j]);
 					// 封装到map中
