@@ -91,14 +91,14 @@ public abstract class FrameworkServlet extends HttpServlet {
 	}
 
 	/**
-	 * 初始化不同WEB容器的默认Servlet
+	 * 初始化不同WEB容器的默认Servlet名称
 	 *
 	 * @param config
 	 */
 	private void initDefaultServlet(ServletConfig config) {
 		ServletContext servletContext = config.getServletContext();
 		defaultServletName = servletContext
-				.getInitParameter("defualtServletName");
+				.getInitParameter("defaultServletName");
 		if(!StringUtils.hasText(defaultServletName)){
 			if (servletContext.getNamedDispatcher(COMMON_DEFAULT_SERVLET_NAME) != null) {
 				defaultServletName = COMMON_DEFAULT_SERVLET_NAME;
