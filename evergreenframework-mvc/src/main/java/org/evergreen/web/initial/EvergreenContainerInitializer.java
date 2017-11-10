@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.HandlesTypes;
 
 @HandlesTypes(WebAppInitializer.class)
-public class EvergreenContaninerInitializer implements
+public class EvergreenContainerInitializer implements
 		ServletContainerInitializer {
 
 	// classes集合封装了@HandlesTypes注解定义的接口的所有实现类
