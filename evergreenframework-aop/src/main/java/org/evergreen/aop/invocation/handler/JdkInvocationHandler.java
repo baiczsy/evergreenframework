@@ -9,12 +9,12 @@ import org.evergreen.aop.invocation.context.JdkInvocationContext;
 /*
  * JDK回调处理器
  */
-public class JdkInvacationHandler extends ProxyInvocationHandler implements
+public class JdkInvocationHandler extends ProxyInvocationHandler implements
 		InvocationHandler {
 
 	private Object target;
 
-	public JdkInvacationHandler(Object target) {
+	public JdkInvocationHandler(Object target) {
 		this.target = target;
 	}
 

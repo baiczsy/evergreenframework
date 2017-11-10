@@ -1,7 +1,7 @@
 package org.evergreen.aop.handler;
 
 import org.evergreen.aop.ProxyHandler;
-import org.evergreen.aop.invocation.handler.CglibInvacationHandler;
+import org.evergreen.aop.invocation.handler.CglibInvocationHandler;
 
 import net.sf.cglib.proxy.Enhancer;
 
@@ -13,7 +13,7 @@ public class CglibProxyHandler implements ProxyHandler{
 		  Enhancer enhancer = new Enhancer();
 		  try{		  
 			enhancer.setSuperclass(beanClass);
-			enhancer.setCallback(new CglibInvacationHandler());
+			enhancer.setCallback(new CglibInvocationHandler());
 			return (T)enhancer.create();
 		  }catch(Exception e){
 			  e.printStackTrace();
