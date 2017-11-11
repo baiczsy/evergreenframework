@@ -2,6 +2,7 @@ package org.evergreen.aop;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.Stack;
 
 import org.evergreen.aop.annotation.Around;
 import org.evergreen.aop.annotation.Interceptors;
@@ -12,19 +13,18 @@ import org.evergreen.aop.annotation.Interceptors;
  * @author wangl
  * 
  */
-public class InterceptorStack {
+public class InterceptorStack extends Stack<Method>{
 
-	// 环绕通知栈
-	private LinkedList<Method> adviceMethods = new LinkedList<Method>();
+	private static ThreadLocal<InterceptorStack> local = new ThreadLocal<InterceptorStack>();
 
-	public InterceptorStack(Object target, Method method){
-		// 如果类上定义了Interceptors注解,则将拦截器添加到拦截器栈
-		if (target.getClass().isAnnotationPresent(Interceptors.class))
-			addAdviceToStack(target.getClass()
-					.getAnnotation(Interceptors.class));
-		// 如果方法上定义了Interceptors注解,则将拦截器添加到拦截器栈
-		if (method.isAnnotationPresent(Interceptors.class))
-			addAdviceToStack(method.getAnnotation(Interceptors.class));
+	public static InterceptorStack getInterceptorStack(){
+		if(local.get() == null){
+			local.set(new InterceptorStack());
+		}
+		return local.get();
+	}
+
+	private InterceptorStack(){
 	}
 
 	/**
@@ -32,21 +32,21 @@ public class InterceptorStack {
 	 * 
 	 * @param interceptors
 	 */
-	private void addAdviceToStack(Interceptors interceptors) {
+	void pushAdvice(Interceptors interceptors) {
 		// 根据value的值取出注解中的参数数组，就是一组拦截器的class对象
 		Class<?>[] inters = interceptors.value();
 		// 迭代数组，获取每一个拦截器
 		for (Class<?> interceptorClazz : inters) {
 			for (Method method : interceptorClazz.getMethods()) {
 				if (method.isAnnotationPresent(Around.class)){
-					//将环绕通知方法存入集合
-					adviceMethods.add(method);
+					//将环绕通知方法存入Stack
+					push(method);
 				}
 			}
 		}
 	}
 
-	public LinkedList<Method> getAdviceMethods() {
-		return adviceMethods;
+	public void removeLocal(){
+		local.remove();
 	}
 }

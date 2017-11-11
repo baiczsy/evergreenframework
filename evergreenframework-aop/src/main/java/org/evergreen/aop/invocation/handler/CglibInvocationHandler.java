@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import org.evergreen.aop.InvocationContext;
 import org.evergreen.aop.ProxyInvocationHandler;
 import org.evergreen.aop.invocation.context.CglibInvocationContext;
 
@@ -16,8 +17,9 @@ public class CglibInvocationHandler extends ProxyInvocationHandler implements
 
 	public Object intercept(Object target, Method method, Object[] args,
 			MethodProxy proxy) throws Throwable {
-		//初始化回调上下文
-		initInvocationContext(target, method, args, new CglibInvocationContext());
+		//设置回调上下文
+		CglibInvocationContext invocationContext = new CglibInvocationContext(target, method, args);
+		setInvocationContext(invocationContext);
 		// 校验方法有效性
 		// 如果当前方法不是@Exculte注解标注的方法,
 		// 并且当前的方法不是继承自Object(也就是不需要代理Object类中的方法),
@@ -25,11 +27,11 @@ public class CglibInvocationHandler extends ProxyInvocationHandler implements
 		// 则委托给外部回调处理器
 		if (isEffectiveMethod(method)) {
 			// CGLIB回调上下文中需要额外传入一个methodProxy
-			((CglibInvocationContext) invocationContext).setProxy(proxy);
+			invocationContext.setProxy(proxy);
 			// 调用拦截器栈，并返回结果
 			return invokeStack();
 		}
-		// 否则直接回调目标方法
+		// 否则回调目标方法
 		return proxy.invokeSuper(target, args);
 	}
 }

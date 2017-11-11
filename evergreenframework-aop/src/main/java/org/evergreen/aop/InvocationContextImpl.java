@@ -1,7 +1,10 @@
 package org.evergreen.aop;
 
+import org.evergreen.aop.annotation.Interceptors;
+
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public abstract class InvocationContextImpl implements InvocationContext {
 
@@ -20,18 +23,38 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	/**
 	 * 环绕通知栈
 	 */
-	protected LinkedList<Method> adviceMethods;
-	
+	protected InterceptorStack stack = InterceptorStack.getInterceptorStack();
+
+
+	/**
+	 * 初始化拦截器栈
+	 */
+	public InvocationContextImpl(Object target, Method method, Object[] parameters){
+		this.target = target;
+		this.method = method;
+		this.parameters = parameters;
+		//设置拦截器栈
+		resolveAdvice(target, method);
+	}
+
+	/**
+	 * 解析通知
+	 */
+	private void resolveAdvice(Object target, Method method){
+		// 如果类上定义了Interceptors注解,则将拦截器添加到拦截器栈
+		if (target.getClass().isAnnotationPresent(Interceptors.class))
+			stack.pushAdvice(target.getClass()
+					.getAnnotation(Interceptors.class));
+		// 如果方法上定义了Interceptors注解,则将拦截器添加到拦截器栈
+		if (method.isAnnotationPresent(Interceptors.class))
+			stack.pushAdvice(method.getAnnotation(Interceptors.class));
+	}
 
 	/**
 	 * 获取目标对象的所有参数
 	 */
 	public Object[] getParameters() {
 		return parameters;
-	}
-	
-	protected void setParameters(Object[] parameters){
-		this.parameters = parameters;
 	}
 
 	/**
@@ -40,34 +63,12 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	public Object getTarget() {
 		return target;
 	}
-	
-	protected void setTarget(Object target){
-		this.target = target;
-	}
 
 	/**
 	 * 获取当前调用的方法
 	 */
 	public Method getMethod() {
 		return method;
-	}
-	
-	protected void setMethod(Method method){
-		this.method = method;
-	}
-	
-	protected void setStack(InterceptorStack stack){
-		this.adviceMethods = stack.getAdviceMethods();
-	}
-
-	/**
-	 * 环绕通知回调
-	 */
-	protected Object invokeAroundAdvice() throws Exception {
-		// 从栈中尾部取出一个通知执行
-		Method method = adviceMethods.removeFirst();
-		return method.invoke(method.getDeclaringClass().newInstance(), this);
-
 	}
 
 	/**
@@ -77,15 +78,26 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	 */
 	public Object proceed() throws Throwable {
 		// 如果环绕通知栈不为空，那么继续执行栈中的通知方法
-		if (!adviceMethods.isEmpty()) {
-			return invokeAroundAdvice();
+		if (!stack.empty()) {
+			return invokeAdvice();
 		}
-		// 拦截器栈调用完后将调用目标对象的方法
+		stack.removeLocal();
+		// 调用目标对象的方法
 		return invokeProcess();
 	}
 
 	/**
-	 * 回调处理,调用目标对象的具体行为,不同的代理有不同的调用机制
+	 * 环绕通知回调
+	 */
+	protected Object invokeAdvice() throws Exception {
+		// 从栈中尾部取出一个通知执行
+		Method method = stack.pop();
+		return method.invoke(method.getDeclaringClass().newInstance(), this);
+
+	}
+
+	/**
+	 * 回调处理,调用目标对象的具体行为
 	 */
 	protected abstract Object invokeProcess() throws Throwable;
 }

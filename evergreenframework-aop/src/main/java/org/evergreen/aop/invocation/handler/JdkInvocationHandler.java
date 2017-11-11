@@ -24,8 +24,8 @@ public class JdkInvocationHandler extends ProxyInvocationHandler implements
 		// 实现类的方法中定义了注解
 		Method targetMethod = target.getClass().getMethod(method.getName(),
 				method.getParameterTypes());
-		//初始化回调上下文
-		initInvocationContext(target, targetMethod, args, new JdkInvocationContext());
+		//设置回调上下文
+		setInvocationContext(new JdkInvocationContext(target, targetMethod, args));
 		// 校验方法有效性
 		// 如果当前方法不是注解注入方法,
 		// 并且当前的方法不是继承自Object,
