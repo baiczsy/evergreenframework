@@ -13,7 +13,7 @@ import org.evergreen.aop.annotation.Interceptors;
  * @author wangl
  * 
  */
-public class InterceptorStack extends Stack<Method>{
+public class InterceptorStack extends Stack<Method> {
 
 	private static ThreadLocal<InterceptorStack> local = new ThreadLocal<InterceptorStack>();
 

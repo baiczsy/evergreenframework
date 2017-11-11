@@ -29,28 +29,25 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	protected InterceptorStack stack = InterceptorStack.getInterceptorStack();
 
 
-	/**
-	 * 初始化拦截器栈
-	 */
 	public InvocationContextImpl(Object target, Method method, Object[] parameters){
 		this.target = target;
 		this.method = method;
 		this.parameters = parameters;
-		//设置拦截器栈
-		resolveAdvice(target, method);
+		resolveAnnotation(method);
 	}
 
 	/**
-	 * 解析通知
+	 * 解析方法上以及定义该方法的类上定义了Interceptors注解,
+	 * 并将注解定义的拦截器添加到拦截器栈
 	 */
-	private void resolveAdvice(Object target, Method method){
-		// 如果类上定义了Interceptors注解,则将拦截器添加到拦截器栈
-		if (target.getClass().isAnnotationPresent(Interceptors.class))
-			stack.pushAdvice(target.getClass()
-					.getAnnotation(Interceptors.class));
-		// 如果方法上定义了Interceptors注解,则将拦截器添加到拦截器栈
-		if (method.isAnnotationPresent(Interceptors.class))
+	private void resolveAnnotation(Method method){
+		if (method.isAnnotationPresent(Interceptors.class)) {
 			stack.pushAdvice(method.getAnnotation(Interceptors.class));
+		}
+		if(method.getDeclaringClass().isAnnotationPresent(Interceptors.class)){
+			stack.pushAdvice(method.getDeclaringClass().getAnnotation(Interceptors.class));
+		}
+
 	}
 
 	/**
@@ -84,9 +81,10 @@ public abstract class InvocationContextImpl implements InvocationContext {
 		if (!stack.empty()) {
 			return invokeAdvice();
 		}
-		stack.removeLocal();
 		// 调用目标对象的方法
-		return invokeProcess();
+		Object obj = invokeProcess();
+		stack.removeLocal();
+		return obj;
 	}
 
 	/**
