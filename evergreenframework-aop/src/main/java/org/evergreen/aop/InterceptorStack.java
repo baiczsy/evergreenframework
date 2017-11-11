@@ -46,7 +46,7 @@ public class InterceptorStack extends Stack<Method>{
 		}
 	}
 
-	public void removeLocal(){
+	void removeLocal(){
 		local.remove();
 	}
 }
