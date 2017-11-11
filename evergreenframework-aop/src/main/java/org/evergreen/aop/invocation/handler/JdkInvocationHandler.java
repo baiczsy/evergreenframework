@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import org.evergreen.aop.ProxyInvocationHandler;
 import org.evergreen.aop.invocation.context.JdkInvocationContext;
 
-/*
+/**
  * JDK回调处理器
  */
 public class JdkInvocationHandler extends ProxyInvocationHandler implements

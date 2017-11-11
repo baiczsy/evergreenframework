@@ -6,6 +6,9 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Stack;
 
+/**
+ * 回调上下文
+ */
 public abstract class InvocationContextImpl implements InvocationContext {
 
 	/**

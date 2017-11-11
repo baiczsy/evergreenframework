@@ -13,7 +13,6 @@ public abstract class ProxyInvocationHandler {
 
 	/**
 	 * 设置回调上下文
-	 * @param args
 	 * @param invocationContext
      */
 	protected void setInvocationContext(InvocationContext invocationContext) {

@@ -4,7 +4,9 @@ import org.evergreen.aop.InvocationContextImpl;
 
 import java.lang.reflect.Method;
 
-
+/**
+ * JDK回调上下文
+ */
 public class JdkInvocationContext extends InvocationContextImpl {
 
 	public JdkInvocationContext(Object target, Method method, Object[] parameters){

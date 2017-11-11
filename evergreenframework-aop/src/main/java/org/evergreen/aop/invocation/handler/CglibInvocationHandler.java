@@ -9,7 +9,7 @@ import org.evergreen.aop.InvocationContext;
 import org.evergreen.aop.ProxyInvocationHandler;
 import org.evergreen.aop.invocation.context.CglibInvocationContext;
 
-/*
+/**
  * CGLIB回调处理器
  */
 public class CglibInvocationHandler extends ProxyInvocationHandler implements

@@ -5,6 +5,9 @@ import org.evergreen.aop.invocation.handler.CglibInvocationHandler;
 
 import net.sf.cglib.proxy.Enhancer;
 
+/**
+ * Cglib动态代理构建处理器
+ */
 public class CglibProxyHandler implements ProxyHandler{
 
 	//使用cglib动态代理
