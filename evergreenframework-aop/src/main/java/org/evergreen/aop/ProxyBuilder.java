@@ -26,7 +26,6 @@ public class ProxyBuilder {
 
 	public ProxyBuilder(Class<?> beanClass) {
 		this.beanClass = beanClass;
-		// 根据解析器解析目标对象后,获取需要创建代理的生成器类名
 		aopHandler = createProxyHandler();
 	}
 
