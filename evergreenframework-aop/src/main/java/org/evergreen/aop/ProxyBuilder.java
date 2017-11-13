@@ -27,18 +27,20 @@ public class ProxyBuilder {
 	public ProxyBuilder(Class<?> beanClass) {
 		this.beanClass = beanClass;
 		// 根据解析器解析目标对象后,获取需要创建代理的生成器类名
-		aopHandler = resolveProxyHandler();
+		aopHandler = createProxyHandler();
 	}
 
 	/**
-	 * 判断是否需要创建代理,依据类型或方法上是否定义拦截器注解
-	 * 如果需要,则获取代理生成器的完整类型
+	 * 依据类型或方法上是否定义拦截器注解
+	 * 判断是使用CGLIB或是JDK代理 如果此类实现的接口数大于0,使用JDK动态代理 否则使用CGLIB来创建代理
 	 *
 	 * @return
 	 */
-	private ProxyHandler resolveProxyHandler() {
-		return (isInterceptorClass() || isInterceptorMethod()) ? getProxyType(beanClass
-				.getInterfaces()) : null;
+	private ProxyHandler createProxyHandler() {
+		if(isInterceptorClass() || isInterceptorMethod()){
+			return beanClass.getInterfaces().length > 0 ? new JdkProxyHandler() : new CglibProxyHandler();
+		}
+		return null;
 	}
 
 	/**
@@ -57,22 +59,11 @@ public class ProxyBuilder {
 	 */
 	private boolean isInterceptorMethod() {
 		for (Method method : beanClass.getMethods()) {
-			if (method.isAnnotationPresent(Interceptors.class))
+			if (method.isAnnotationPresent(Interceptors.class)) {
 				return true;
+			}
 		}
 		return false;
-	}
-
-	/**
-	 * 判断是使用CGLIB或是JDK代理 如果此类实现的接口数大于0,使用JDK动态代理 否则使用CGLIB来创建代理
-	 * 
-	 * @param interfaces  当前Class实现的所有接口
-	 * @return
-	 */
-	private ProxyHandler getProxyType(Class<?>[] interfaces) {
-		// 如果此类实现的接口数大于0,使用JDK动态代理
-		// 否则使用CGLIB来创建代理
-		return interfaces.length > 0 ? new JdkProxyHandler() : new CglibProxyHandler();
 	}
 
 	/**
@@ -82,8 +73,6 @@ public class ProxyBuilder {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy() {
-		if (aopHandler != null)
-			return (T)aopHandler.createProxy(beanClass);
-		return null;
+		return (aopHandler != null) ? (T)aopHandler.createProxy(beanClass) : null;
 	}
 }

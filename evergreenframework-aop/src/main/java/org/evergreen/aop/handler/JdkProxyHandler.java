@@ -10,7 +10,9 @@ import org.evergreen.aop.invocation.handler.JdkInvocationHandler;
  */
 public class JdkProxyHandler implements ProxyHandler {
 
-	// 使用JDK动态代理
+	/**
+	 * 使用JDK动态代理
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy(Class<T> beanClass) {
 		try {
@@ -19,8 +21,7 @@ public class JdkProxyHandler implements ProxyHandler {
 			return (T)Proxy.newProxyInstance(beanInstance.getClass().getClassLoader(),
 					beanInstance.getClass().getInterfaces(), handler);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Create JdkProxyHandler fail.", e);
 		}
 	}
 }
