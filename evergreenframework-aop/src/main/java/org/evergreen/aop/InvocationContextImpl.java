@@ -28,6 +28,26 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	 */
 	protected InterceptorStack stack = InterceptorStack.getInterceptorStack();
 
+	/**
+	 * 获取目标对象的所有参数
+	 */
+	public Object[] getParameters() {
+		return parameters;
+	}
+
+	/**
+	 * 获取目标对象
+	 */
+	public Object getTarget() {
+		return target;
+	}
+
+	/**
+	 * 获取当前调用的方法
+	 */
+	public Method getMethod() {
+		return method;
+	}
 
 	public InvocationContextImpl(Object target, Method method, Object[] parameters){
 		this.target = target;
@@ -48,27 +68,6 @@ public abstract class InvocationContextImpl implements InvocationContext {
 			stack.pushAdvice(method.getDeclaringClass().getAnnotation(Interceptors.class));
 		}
 
-	}
-
-	/**
-	 * 获取目标对象的所有参数
-	 */
-	public Object[] getParameters() {
-		return parameters;
-	}
-
-	/**
-	 * 获取目标对象
-	 */
-	public Object getTarget() {
-		return target;
-	}
-
-	/**
-	 * 获取当前调用的方法
-	 */
-	public Method getMethod() {
-		return method;
 	}
 
 	/**
