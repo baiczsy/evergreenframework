@@ -14,7 +14,7 @@ public class JdkInvocationContext extends InvocationContextImpl {
 	}
 
 
-	protected Object invokeProcess() throws Exception {
+	protected Object invokeTarget() throws Exception {
 		return method.invoke(target, parameters);
 	}
 

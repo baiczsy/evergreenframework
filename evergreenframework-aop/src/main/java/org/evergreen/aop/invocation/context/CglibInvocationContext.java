@@ -22,7 +22,7 @@ public class CglibInvocationContext extends InvocationContextImpl {
 	}
 
 	@Override
-	protected Object invokeProcess() throws Throwable {
+	protected Object invokeTarget() throws Throwable {
 		// 调用目标对象的行为方法
 		return proxy.invokeSuper(target, parameters);
 	}

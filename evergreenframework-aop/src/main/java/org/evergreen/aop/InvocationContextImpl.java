@@ -82,7 +82,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
 			return invokeAdvice();
 		}
 		// 调用目标对象的方法
-		Object obj = invokeProcess();
+		Object obj = invokeTarget();
 		stack.removeLocal();
 		return obj;
 	}
@@ -100,5 +100,5 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	/**
 	 * 回调处理,调用目标对象的具体行为
 	 */
-	protected abstract Object invokeProcess() throws Throwable;
+	protected abstract Object invokeTarget() throws Throwable;
 }
