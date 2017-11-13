@@ -24,16 +24,13 @@ public class JdkInvocationHandler extends ProxyInvocationHandler implements
 		// 实现类的方法中定义了注解
 		Method targetMethod = target.getClass().getMethod(method.getName(),
 				method.getParameterTypes());
-		//设置回调上下文
-		setInvocationContext(new JdkInvocationContext(target, targetMethod, args));
-		// 校验方法有效性
-		// 如果当前方法不是注解注入方法,
-		// 并且当前的方法不是继承自Object,
-		// 并且拦截器栈中存有拦截器，则委托给外部回调处理器
-		if (isEffectiveMethod(method))
-			// 调用拦截器栈，并返回结果
-			return invokeStack();
-		// 否则直接回调目标方法
+		// 创建JDK回调上下文
+		JdkInvocationContext invocationContext = new JdkInvocationContext(target, targetMethod, args);
+		// 调用拦截器栈，并返回结果
+		if (isEffectiveMethod(method)) {
+			return invocationContext.proceed();
+		}
+		// 回调目标方法
 		return method.invoke(target, args);
 	}
 }

@@ -17,21 +17,15 @@ public class CglibInvocationHandler extends ProxyInvocationHandler implements
 
 	public Object intercept(Object target, Method method, Object[] args,
 			MethodProxy proxy) throws Throwable {
-		//设置回调上下文
+		//创建CGLIB回调上下文
 		CglibInvocationContext invocationContext = new CglibInvocationContext(target, method, args);
-		setInvocationContext(invocationContext);
-		// 校验方法有效性
-		// 如果当前方法不是@Exculte注解标注的方法,
-		// 并且当前的方法不是继承自Object(也就是不需要代理Object类中的方法),
-		// 并且拦截器栈中存还有其他的通知方法，
-		// 则委托给外部回调处理器
+		// CGLIB回调上下文中需要设置methodProxy
+		invocationContext.setProxy(proxy);
+		// 调用拦截器栈，并返回结果
 		if (isEffectiveMethod(method)) {
-			// CGLIB回调上下文中需要额外传入一个methodProxy
-			invocationContext.setProxy(proxy);
-			// 调用拦截器栈，并返回结果
-			return invokeStack();
+			return invocationContext.proceed();
 		}
-		// 否则回调目标方法
+		// 回调目标方法
 		return proxy.invokeSuper(target, args);
 	}
 }
