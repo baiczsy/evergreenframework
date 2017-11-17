@@ -90,7 +90,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	 * 环绕通知回调
 	 */
 	protected Object invokeAdvice() throws Exception {
-		// 从栈中尾部取出一个通知执行
+		// 从栈中取出一个通知执行
 		Method method = stack.pop();
 		return method.invoke(method.getDeclaringClass().newInstance(), this);
 
