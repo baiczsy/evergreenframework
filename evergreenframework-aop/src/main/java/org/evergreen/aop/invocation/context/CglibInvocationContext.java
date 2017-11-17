@@ -1,7 +1,5 @@
 package org.evergreen.aop.invocation.context;
 
-import org.evergreen.aop.InvocationContextImpl;
-
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;

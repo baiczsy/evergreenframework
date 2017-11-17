@@ -1,7 +1,5 @@
 package org.evergreen.aop.invocation.context;
 
-import org.evergreen.aop.InvocationContextImpl;
-
 import java.lang.reflect.Method;
 
 /**

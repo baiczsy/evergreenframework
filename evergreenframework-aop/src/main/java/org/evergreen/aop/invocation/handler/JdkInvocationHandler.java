@@ -9,8 +9,7 @@ import org.evergreen.aop.invocation.context.JdkInvocationContext;
 /**
  * JDK回调处理器
  */
-public class JdkInvocationHandler extends ProxyInvocationHandler implements
-		InvocationHandler {
+public class JdkInvocationHandler implements InvocationHandler {
 
 	private Object target;
 
@@ -27,10 +26,6 @@ public class JdkInvocationHandler extends ProxyInvocationHandler implements
 		// 创建JDK回调上下文
 		JdkInvocationContext invocationContext = new JdkInvocationContext(target, targetMethod, args);
 		// 调用拦截器栈，并返回结果
-		if (isEffectiveMethod(method)) {
-			return invocationContext.proceed();
-		}
-		// 回调目标方法
-		return method.invoke(target, args);
+		return invocationContext.proceed();
 	}
 }

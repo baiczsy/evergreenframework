@@ -12,8 +12,7 @@ import org.evergreen.aop.invocation.context.CglibInvocationContext;
 /**
  * CGLIB回调处理器
  */
-public class CglibInvocationHandler extends ProxyInvocationHandler implements
-		MethodInterceptor {
+public class CglibInvocationHandler implements MethodInterceptor {
 
 	public Object intercept(Object target, Method method, Object[] args,
 			MethodProxy proxy) throws Throwable {
@@ -22,10 +21,6 @@ public class CglibInvocationHandler extends ProxyInvocationHandler implements
 		// CGLIB回调上下文中需要设置methodProxy
 		invocationContext.setProxy(proxy);
 		// 调用拦截器栈，并返回结果
-		if (isEffectiveMethod(method)) {
-			return invocationContext.proceed();
-		}
-		// 回调目标方法
-		return proxy.invokeSuper(target, args);
+		return invocationContext.proceed();
 	}
 }
