@@ -20,8 +20,8 @@ public interface InvocationContext {
 	Method getMethod();
 	
 	/**
-	 * 回调处理,让不同的子类实现不同的回调处理方法
-	 * @throws Exception 
+	 * 回调处理
+	 * @throws Throwable
 	 */
 	Object proceed() throws Throwable;
 }
