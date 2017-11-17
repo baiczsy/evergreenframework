@@ -26,7 +26,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	/**
 	 * 环绕通知栈
 	 */
-	protected InterceptorStack stack = InterceptorStack.getInterceptorStack();
+	private InterceptorStack stack = InterceptorStack.getInterceptorStack();
 
 	/**
 	 * 获取目标对象的所有参数
