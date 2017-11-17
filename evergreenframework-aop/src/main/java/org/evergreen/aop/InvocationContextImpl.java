@@ -78,22 +78,13 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	public Object proceed() throws Throwable {
 		// 如果环绕通知栈不为空，那么继续执行栈中的通知方法
 		if (!stack.empty()) {
-			return invokeAdvice();
+			Method method = stack.pop();
+			return method.invoke(method.getDeclaringClass().newInstance(), this);
 		}
 		// 调用目标对象的方法
 		Object obj = invokeTarget();
 		stack.removeLocal();
 		return obj;
-	}
-
-	/**
-	 * 环绕通知回调
-	 */
-	protected Object invokeAdvice() throws Exception {
-		// 从栈中取出一个通知执行
-		Method method = stack.pop();
-		return method.invoke(method.getDeclaringClass().newInstance(), this);
-
 	}
 
 	/**
