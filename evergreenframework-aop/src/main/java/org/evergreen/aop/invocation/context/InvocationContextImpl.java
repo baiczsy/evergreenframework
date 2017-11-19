@@ -2,9 +2,9 @@ package org.evergreen.aop.invocation.context;
 
 import org.evergreen.aop.InvocationContext;
 import org.evergreen.aop.annotation.Exclude;
-import org.evergreen.aop.annotation.Interceptors;
 
 import java.lang.reflect.Method;
+import java.util.Stack;
 
 /**
  * 回调上下文
@@ -26,7 +26,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
 	/**
 	 * 环绕通知栈
 	 */
-	private InterceptorStack stack = InterceptorStack.getInterceptorStack();
+	private Stack<Method> stack;
 
 	/**
 	 * 获取目标对象的所有参数
@@ -53,21 +53,14 @@ public abstract class InvocationContextImpl implements InvocationContext {
 		this.target = target;
 		this.method = method;
 		this.parameters = parameters;
-		resolveAnnotation();
+		createStack();
 	}
 
 	/**
-	 * 解析方法上以及定义该方法的类上定义了Interceptors注解,
-	 * 并将注解定义的拦截器添加到拦截器栈
+	 * 创建环绕通知栈
 	 */
-	private void resolveAnnotation(){
-		if (method.isAnnotationPresent(Interceptors.class)) {
-			stack.pushAdvice(method.getAnnotation(Interceptors.class));
-		}
-		if(method.getDeclaringClass().isAnnotationPresent(Interceptors.class)){
-			stack.pushAdvice(method.getDeclaringClass().getAnnotation(Interceptors.class));
-		}
-
+	private void createStack(){
+		stack = StackBuilder.createAdviceStack(method);
 	}
 
 	/**
@@ -85,9 +78,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
 			}
 		}
 		// 调用目标对象的方法
-		Object obj = invokeTarget();
-		stack.removeLocal();
-		return obj;
+		return invokeTarget();
 	}
 
 	/**
