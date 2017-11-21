@@ -7,7 +7,7 @@ import org.evergreen.aop.handler.CglibProxyHandler;
 import org.evergreen.aop.handler.JdkProxyHandler;
 
 /**
- * 代理生成上下文
+ * 代理生成器
  * 
  * @author lenovo
  *
