@@ -12,8 +12,7 @@ import java.util.Stack;
 class StackBuilder {
 
     /**
-     * 解析方法上以及定义该方法的类上定义了Interceptors注解,
-     * 解析对应的切面信息并创建拦截器栈
+     * 解析方法上以及定义该方法的类上的Interceptors注解,
      */
     public static Stack<Method> createAdviceStack(Method method){
         Stack<Method> stack = new Stack<Method>();
@@ -27,7 +26,7 @@ class StackBuilder {
     }
 
     /**
-     *  将切面加入Stack中
+     *  将Interceptors注解标识的切面加入Stack中
      * @param annotation
      * @param stack
      */
