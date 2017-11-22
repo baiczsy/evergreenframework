@@ -9,20 +9,25 @@ import java.lang.reflect.Method;
  */
 public class CglibInvocationContext extends InvocationContextImpl {
 
-	private MethodProxy proxy;
+	private MethodProxy methodProxy;
+	private Object proxy;
 
 	public CglibInvocationContext(Object target, Method method, Object[] parameters){
 		super(target, method, parameters);
 	}
 
-	public void setProxy(MethodProxy proxy) {
+	public void setProxy(Object proxy) {
 		this.proxy = proxy;
+	}
+
+	public void setMethodProxy(MethodProxy methodProxy){
+		this.methodProxy = methodProxy;
 	}
 
 	@Override
 	protected Object invokeTarget() throws Throwable {
 		// 调用目标对象的行为方法
-		return proxy.invokeSuper(target, parameters);
+		return methodProxy.invokeSuper(proxy, parameters);
 	}
 
 }
