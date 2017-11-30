@@ -55,6 +55,9 @@ public class ColumnUtil {
         } else if (propType.equals(Byte.TYPE) || propType.equals(Byte.class)) {
             value = Byte.valueOf(rs.getByte(columnName));
 
+        } else if (propType.equals(Character.TYPE) || propType.equals(Character.class)){
+            value = Character.valueOf(rs.getString(columnName).charAt(0));
+
         } else if (propType.equals(SQLXML.class)) {
             value = rs.getSQLXML(columnName);
 
