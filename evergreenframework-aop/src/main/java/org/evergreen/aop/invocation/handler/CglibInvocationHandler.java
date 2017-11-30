@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import org.evergreen.aop.annotation.Exclude;
 import org.evergreen.aop.invocation.context.CglibInvocationContext;
 
 /**
@@ -25,7 +26,7 @@ public class CglibInvocationHandler implements MethodInterceptor {
 		// 设置methodProxy以及proxy对象
 		invocationContext.setProxy(proxy);
 		invocationContext.setMethodProxy(methodProxy);
-		// 调用拦截器栈，并返回结果
-		return invocationContext.proceed();
+		// 执行回调
+		return invocationContext.invoke();
 	}
 }

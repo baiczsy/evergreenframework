@@ -3,6 +3,7 @@ package org.evergreen.aop.invocation.handler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import org.evergreen.aop.annotation.Exclude;
 import org.evergreen.aop.invocation.context.JdkInvocationContext;
 
 /**
@@ -22,9 +23,8 @@ public class JdkInvocationHandler implements InvocationHandler {
 		// 实现类的方法中定义了注解
 		Method targetMethod = target.getClass().getMethod(method.getName(),
 				method.getParameterTypes());
-		// 创建JDK回调上下文
+		// 创建JDK回调上下文,执行回调处理
 		JdkInvocationContext invocationContext = new JdkInvocationContext(target, targetMethod, args);
-		// 调用拦截器栈，并返回结果
-		return invocationContext.proceed();
+		return invocationContext.invoke();
 	}
 }
