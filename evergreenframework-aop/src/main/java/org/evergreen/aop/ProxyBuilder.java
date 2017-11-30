@@ -39,7 +39,7 @@ public class ProxyBuilder {
 		if(isInterceptorClass() || isInterceptorMethod()){
 			return beanClass.getInterfaces().length > 0 ? new JdkProxyHandler() : new CglibProxyHandler();
 		}
-		return null;
+		throw new RuntimeException("Invalid target object.");
 	}
 
 	/**
@@ -72,6 +72,6 @@ public class ProxyBuilder {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy() {
-		return (aopHandler != null) ? (T)aopHandler.createProxy(beanClass) : null;
+		return (T)aopHandler.createProxy(beanClass);
 	}
 }
