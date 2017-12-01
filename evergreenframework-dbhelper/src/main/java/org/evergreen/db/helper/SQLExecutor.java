@@ -247,12 +247,12 @@ public class SQLExecutor {
     /**
      * 开启事务
      */
-    public void beginTranstaction() {
+    public void beginTransaction() {
         try {
-            autoClose = false;
             connection.setAutoCommit(false);
+            autoClose = false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Begin transaction fail.", e);
         }
     }
 
@@ -263,7 +263,7 @@ public class SQLExecutor {
         try {
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Commit transaction fail.", e);
         } finally {
             close();
         }
@@ -273,7 +273,7 @@ public class SQLExecutor {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Rollback transaction fail.", e);
         } finally {
             close();
         }
@@ -285,11 +285,13 @@ public class SQLExecutor {
      * @param rs
      */
     private void close(ResultSet rs) {
-        if (rs != null)
+        if (rs != null) {
             try {
                 rs.close();
             } catch (SQLException e) {
+                throw new RuntimeException("Close resultset fail.", e);
             }
+        }
     }
 
     /**
@@ -298,11 +300,13 @@ public class SQLExecutor {
      * @param st
      */
     private void close(Statement st) {
-        if (st != null)
+        if (st != null) {
             try {
                 st.close();
             } catch (SQLException e) {
+                throw new RuntimeException("Close statement fail.", e);
             }
+        }
     }
 
     /**
@@ -314,6 +318,7 @@ public class SQLExecutor {
                 connection.close();
             }
         } catch (SQLException e) {
+            throw new RuntimeException("Close connection fail.", e);
         }
     }
 
