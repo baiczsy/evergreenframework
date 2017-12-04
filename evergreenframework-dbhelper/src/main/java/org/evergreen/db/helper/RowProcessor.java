@@ -50,8 +50,9 @@ public class RowProcessor {
 	public static Object[] toArray(ResultSet rs) throws SQLException {
 		ResultSetMetaData meta = rs.getMetaData();
 		Object[] result = new Object[meta.getColumnCount()];
-		for (int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++) {
 			result[i] = rs.getObject(i + 1);
+		}
 		return result;
 	}
 

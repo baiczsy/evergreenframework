@@ -33,30 +33,30 @@ public class ColumnUtil {
 
         } else if (propType.equals(Integer.TYPE)
                 || propType.equals(Integer.class)) {
-            value = Integer.valueOf(rs.getInt(columnName));
+            value = rs.getInt(columnName);
 
         } else if (propType.equals(Boolean.TYPE)
                 || propType.equals(Boolean.class)) {
-            value = Boolean.valueOf(rs.getBoolean(columnName));
+            value = rs.getBoolean(columnName);
 
         } else if (propType.equals(Long.TYPE) || propType.equals(Long.class)) {
-            value = Long.valueOf(rs.getLong(columnName));
+            value = rs.getLong(columnName);
 
         } else if (propType.equals(Double.TYPE)
                 || propType.equals(Double.class)) {
-            value = Double.valueOf(rs.getDouble(columnName));
+            value = rs.getDouble(columnName);
 
         } else if (propType.equals(Float.TYPE) || propType.equals(Float.class)) {
-            value = Float.valueOf(rs.getFloat(columnName));
+            value = rs.getFloat(columnName);
 
         } else if (propType.equals(Short.TYPE) || propType.equals(Short.class)) {
-            value = Short.valueOf(rs.getShort(columnName));
+            value = rs.getShort(columnName);
 
         } else if (propType.equals(Byte.TYPE) || propType.equals(Byte.class)) {
-            value = Byte.valueOf(rs.getByte(columnName));
+            value = rs.getByte(columnName);
 
         } else if (propType.equals(Character.TYPE) || propType.equals(Character.class)){
-            value = Character.valueOf(rs.getString(columnName).charAt(0));
+            value = rs.getString(columnName).charAt(0);
 
         } else if (propType.equals(SQLXML.class)) {
             value = rs.getSQLXML(columnName);
