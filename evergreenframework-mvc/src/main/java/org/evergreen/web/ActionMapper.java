@@ -17,10 +17,6 @@ public class ActionMapper {
 	 */
 	private Object[] params;
 
-	/**
-	 * Action返回的试图结果集
-	 */
-
 	public Object getTarget() {
 		return target;
 	}
