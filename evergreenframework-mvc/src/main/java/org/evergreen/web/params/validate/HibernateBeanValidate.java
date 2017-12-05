@@ -22,8 +22,7 @@ import org.evergreen.web.ParamsValidate;
 import org.evergreen.web.utils.ResourceUtil;
 
 public class HibernateBeanValidate implements ParamsValidate {
-	public Map<String, String> validate(ActionMapper mapping)
-			throws ActionException, IOException {
+	public Map<String, String> validate(ActionMapper mapping) {
 		Map<String, String> messages = new HashMap<String, String>();
 		// 获取方法参数上的所有注解
 		Annotation[][] paramAmmotations = mapping.getDefinition().getMethod()

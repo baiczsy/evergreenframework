@@ -77,7 +77,7 @@ public class ActionServlet extends FrameworkServlet {
 				// 清除ActionContext的本地线程副本
 				destroyActionContext();
 			}
-		} catch(Throwable e) {
+		} catch(ActionException e) {
 			e.printStackTrace();
 			rethrowError(e);
 		}
@@ -118,7 +118,7 @@ public class ActionServlet extends FrameworkServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void response(Object viewObject) throws Exception {
+	private void response(Object viewObject) throws IOException, ServletException {
 		if (viewObject != null) {
 			ViewResult viewResult = (viewObject instanceof ViewResult) ? (ViewResult) viewObject
 					: new DefaultViewResult(viewObject);
@@ -131,15 +131,9 @@ public class ActionServlet extends FrameworkServlet {
 	 * @param e
 	 * @throws IOException
 	 */
-	private void rethrowError(Throwable e) throws ServletException {
+	private void rethrowError(ActionException e) throws ServletException, IOException {
 		HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(FrameworkServlet.RESPONSE);
-		if(e instanceof ActionException){
-			try {
-				response.sendError(((ActionException)e).getResponseStatus(), e.getMessage());
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+		response.sendError(e.getResponseStatus(), e.getMessage());
 		throw new ServletException(e.getMessage());
 	}
 

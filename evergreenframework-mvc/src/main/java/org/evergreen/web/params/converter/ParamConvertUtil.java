@@ -12,7 +12,7 @@ import java.util.ServiceLoader;
 
 public class ParamConvertUtil {
 
-    public static Object[] convert(ActionMapper mapper) throws Exception {
+    public static Object[] convert(ActionMapper mapper) {
         ActionDefinition definition = mapper.getDefinition();
         Object[] params = new Object[definition.getParamInfo().size()];
         for (int i = 0; i < params.length; i++) {
@@ -25,7 +25,7 @@ public class ParamConvertUtil {
     }
 
     // 执行批量参数映射
-    private static Object doExecute(ParamInfo paramInfo) throws Exception {
+    private static Object doExecute(ParamInfo paramInfo) {
         // 使用ServiceLoader来加载SPI实现类
         // 对应的实现类名称必须放在META-INF\services目录下
         ServiceLoader<ParamsConvertHandler> loader = ServiceLoader.load(ParamsConvertHandler.class);
@@ -40,8 +40,7 @@ public class ParamConvertUtil {
     }
 
     // 抛出基本类型的异常信息
-    private static void isPrimitive(Object param, ParamInfo paramInfo)
-            throws Exception {
+    private static void isPrimitive(Object param, ParamInfo paramInfo) {
         if (param == null && paramInfo.getParamType().isPrimitive())
             throw new ParamMappingException(paramInfo
                     .getParamType().toString(), paramInfo.getParamName());

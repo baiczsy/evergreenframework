@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DefaultHandlerMapping implements HandlerMapping {
     @Override
-    public ActionMapper handler() throws Exception {
+    public ActionMapper handler() {
         ActionMapper mapper = new ActionMapper();
         HttpServletRequest request = (HttpServletRequest) ActionContext
                 .getContext().get(FrameworkServlet.REQUEST);

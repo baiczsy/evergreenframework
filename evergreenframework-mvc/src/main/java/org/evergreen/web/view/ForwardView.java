@@ -14,8 +14,9 @@ public class ForwardView extends JumpPage {
 	}
 
 	protected void execute() throws IOException, ServletException {
-		if (url != null)
-			getRequest().getRequestDispatcher("/"+url.trim()).forward(getRequest(),
+		if (url != null) {
+			getRequest().getRequestDispatcher("/" + url.trim()).forward(getRequest(),
 					getResponse());
+		}
 	}
 }

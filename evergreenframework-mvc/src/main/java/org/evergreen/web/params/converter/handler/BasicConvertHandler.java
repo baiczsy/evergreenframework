@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class BasicConvertHandler extends ParamsConvertHandler {
 
-    public Object execute(ParamInfo paramInfo) throws ParamConvertException{
+    public Object execute(ParamInfo paramInfo) {
         Object param = (paramInfo.getParamType().isArray()) ? getRequest()
                 .getParameterValues(paramInfo.getParamName()) : getRequest()
                 .getParameter(paramInfo.getParamName());

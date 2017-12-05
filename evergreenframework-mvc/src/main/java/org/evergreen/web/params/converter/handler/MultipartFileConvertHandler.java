@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 
+import org.evergreen.web.exception.UploadFileException;
 import org.evergreen.web.params.ParamInfo;
 import org.evergreen.web.params.converter.ParamsConvertHandler;
 import org.evergreen.web.MultipartFile;
@@ -17,13 +18,19 @@ public class MultipartFileConvertHandler extends ParamsConvertHandler {
 
 	private final static String CONTENT_DISPOSITION = "content-disposition";
 
-	public Object execute(ParamInfo paramInfo) throws IOException, ServletException {
-		if (paramInfo.getParamType().equals(MultipartFile.class)) {
-			return buildMultipartFile(paramInfo.getParamName());
-		} else if (paramInfo.getParamType().isArray()
-				&& paramInfo.getParamType().getComponentType()
-						.equals(MultipartFile.class)) {
-			return buildMultipartFiles();
+	public Object execute(ParamInfo paramInfo) {
+		try {
+			if (paramInfo.getParamType().equals(MultipartFile.class)) {
+                return buildMultipartFile(paramInfo.getParamName());
+            } else if (paramInfo.getParamType().isArray()
+                    && paramInfo.getParamType().getComponentType()
+                            .equals(MultipartFile.class)) {
+                return buildMultipartFiles();
+            }
+		} catch (IOException e) {
+			throw new UploadFileException("Upload file fail.", e);
+		} catch (ServletException e) {
+			throw new UploadFileException("Upload file fail.", e);
 		}
 		return null;
 	}

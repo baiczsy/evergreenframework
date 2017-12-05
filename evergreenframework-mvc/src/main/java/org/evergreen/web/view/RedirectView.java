@@ -14,11 +14,11 @@ public class RedirectView extends JumpPage {
 	}
 
 	protected void execute() throws IOException {
-		if (url != null)
+		if (url != null) {
 			getResponse().sendRedirect(
 					ActionContext.getContext().getContextPath() + "/"
 							+ url.trim());
-
+		}
 	}
 
 }

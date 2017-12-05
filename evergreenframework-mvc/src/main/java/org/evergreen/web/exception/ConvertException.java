@@ -1,7 +1,9 @@
-package org.evergreen.web.params.converter.handler;
+package org.evergreen.web.exception;
 
 
-public class ConvertException extends RuntimeException{
+import org.evergreen.web.exception.ActionException;
+
+public class ConvertException extends ActionException{
 	
 	/**
 	 * 

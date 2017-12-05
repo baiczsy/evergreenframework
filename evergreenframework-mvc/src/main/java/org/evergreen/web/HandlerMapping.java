@@ -5,5 +5,5 @@ package org.evergreen.web;
  */
 public interface HandlerMapping {
 
-    ActionMapper handler() throws Exception;
+    ActionMapper handler();
 }
