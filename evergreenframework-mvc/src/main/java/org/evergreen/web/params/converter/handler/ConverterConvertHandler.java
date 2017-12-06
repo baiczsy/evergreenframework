@@ -2,6 +2,7 @@ package org.evergreen.web.params.converter.handler;
 
 import java.lang.annotation.Annotation;
 
+import org.evergreen.web.HttpStatus;
 import org.evergreen.web.annotation.Convert;
 import org.evergreen.web.exception.ParamConvertException;
 import org.evergreen.web.params.ParamInfo;
@@ -22,9 +23,11 @@ public class ConverterConvertHandler extends AnnotationConvertHandler {
 					ConvertUtils.register(converter, paramInfo.getParamType());
 					return ConvertUtils.convert(value,paramInfo.getParamType());
 				} catch (InstantiationException e) {
-					throw new ParamConvertException(value, paramInfo.getParamType().getName());
+					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".",
+							HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				} catch (IllegalAccessException e) {
-					throw new ParamConvertException(value, paramInfo.getParamType().getName());
+					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".",
+							HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				}
 			}
 		}

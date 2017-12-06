@@ -2,12 +2,10 @@ package org.evergreen.web.params.converter;
 
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.ActionMapper;
-import org.evergreen.web.exception.ParamMappingException;
+import org.evergreen.web.HttpStatus;
+import org.evergreen.web.exception.ParamConvertException;
 import org.evergreen.web.params.ParamInfo;
-import org.evergreen.web.params.converter.ParamsConvertHandler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ServiceLoader;
 
 public class ParamConvertUtil {
@@ -42,8 +40,8 @@ public class ParamConvertUtil {
     // 抛出基本类型的异常信息
     private static void isPrimitive(Object param, ParamInfo paramInfo) {
         if (param == null && paramInfo.getParamType().isPrimitive())
-            throw new ParamMappingException(paramInfo
-                    .getParamType().toString(), paramInfo.getParamName());
+            throw new ParamConvertException("Optional "+paramInfo.getParamType().getName()+" parameter "+ paramInfo.getParamName()+ " is present but cannot be translated into a null value due to being declared as a primitive type. ",
+                    HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
     }
 }

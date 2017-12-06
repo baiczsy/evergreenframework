@@ -7,7 +7,20 @@ import org.evergreen.web.HttpStatus;
  */
 public class ParamConvertException extends ActionException{
 
-    public ParamConvertException(Object value, String type) {
-        super(value + " can not be converted to "+type+".", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    public ParamConvertException(String message){
+        super(message);
     }
+
+    public ParamConvertException(Throwable cause){
+        super(cause);
+    }
+
+    public ParamConvertException(String message, Throwable cause){
+        super(message, cause);
+    }
+
+    public ParamConvertException(String message, int responseStatus) {
+        super(message, responseStatus);
+    }
+
 }

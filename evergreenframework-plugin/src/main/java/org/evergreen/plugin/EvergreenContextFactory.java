@@ -5,6 +5,7 @@ import org.evergreen.beans.factory.BeanFactory;
 import org.evergreen.plugin.utils.BeanNameUtil;
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.ActionFactory;
+import org.evergreen.web.HttpStatus;
 import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.exception.RequestMappingException;
 
@@ -26,7 +27,7 @@ public class EvergreenContextFactory implements ActionFactory {
 	public Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException {
 		if (definition == null) {
-			throw new RequestMappingException();
+			throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
 		}
 		Method method = definition.getMethod();
 		if (method != null)
@@ -34,7 +35,7 @@ public class EvergreenContextFactory implements ActionFactory {
 				return beanFactory.getBean(getBeanName(method));
 			} catch (BeanContainerException e) {
 				e.printStackTrace();
-				throw new RequestMappingException();
+				throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
 			}
 		return null;
 	}

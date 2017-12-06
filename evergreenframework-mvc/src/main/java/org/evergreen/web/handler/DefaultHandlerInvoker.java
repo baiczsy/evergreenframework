@@ -34,7 +34,7 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
             targetAction = actionFactory
                     .crateAction(mapper.getDefinition());
         if (targetAction == null) {
-            throw new TargetActionException();
+            throw new TargetActionException("Can not find the target action.", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
         mapper.setTarget(targetAction);
     }

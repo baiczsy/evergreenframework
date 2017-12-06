@@ -35,7 +35,7 @@ public class DefaultHandlerMapping implements HandlerMapping {
             }
         }
         if(isRequestUri && !isRequestMethod){
-            throw new RequestMethodException(request.getMethod());
+            throw new RequestMethodException("Request method '"+request.getMethod()+"' not supported", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
         return mapper;
     }

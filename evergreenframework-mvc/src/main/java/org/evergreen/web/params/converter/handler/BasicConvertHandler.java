@@ -1,5 +1,6 @@
 package org.evergreen.web.params.converter.handler;
 
+import org.evergreen.web.HttpStatus;
 import org.evergreen.web.exception.ParamConvertException;
 import org.evergreen.web.params.ParamInfo;
 import org.evergreen.web.params.converter.ParamsConvertHandler;
@@ -19,11 +20,13 @@ public class BasicConvertHandler extends ParamsConvertHandler {
         Object value = ConvertUtils
                 .convert(param, paramInfo.getParamType());
         if (value == null && paramInfo.getParamType().isPrimitive()){
-            throw new ParamConvertException(param, paramInfo.getParamType().getName());
+            throw new ParamConvertException(param + " can not be converted to "+paramInfo.getParamType().getName()+".",
+                    HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
         if (value != null) {
             if(value.getClass().equals(String.class) && !value.getClass().equals(paramInfo.getParamType())){
-                throw new ParamConvertException(param, paramInfo.getParamType().getName());
+                throw new ParamConvertException(param + " can not be converted to "+paramInfo.getParamType().getName()+".",
+                        HttpStatus.SC_INTERNAL_SERVER_ERROR);
             }
             return value;
         }

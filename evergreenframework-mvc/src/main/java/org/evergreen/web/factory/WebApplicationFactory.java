@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.ActionFactory;
+import org.evergreen.web.HttpStatus;
 import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.exception.RequestMappingException;
 
@@ -26,7 +27,7 @@ public class WebApplicationFactory implements ActionFactory {
 				e.printStackTrace();
 			}
 		} else {
-			throw new RequestMappingException();
+			throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
 		}
 		return null;
 	}
