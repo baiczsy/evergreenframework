@@ -40,8 +40,7 @@ public class ParamConvertUtil {
     // 抛出基本类型的异常信息
     private static void isPrimitive(Object param, ParamInfo paramInfo) {
         if (param == null && paramInfo.getParamType().isPrimitive())
-            throw new ParamConvertException("Optional "+paramInfo.getParamType().getName()+" parameter "+ paramInfo.getParamName()+ " is present but cannot be translated into a null value due to being declared as a primitive type. ",
-                    HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            throw new ParamConvertException("Optional "+paramInfo.getParamType().getName()+" parameter "+ paramInfo.getParamName()+ " is present but cannot be translated into a null value due to being declared as a primitive type.");
 
     }
 }

@@ -27,7 +27,7 @@ public class WebApplicationFactory implements ActionFactory {
 				e.printStackTrace();
 			}
 		} else {
-			throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
+			throw new RequestMappingException("No mapping found for HTTP request with URI.");
 		}
 		return null;
 	}

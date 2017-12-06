@@ -23,11 +23,9 @@ public class ConverterConvertHandler extends AnnotationConvertHandler {
 					ConvertUtils.register(converter, paramInfo.getParamType());
 					return ConvertUtils.convert(value,paramInfo.getParamType());
 				} catch (InstantiationException e) {
-					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".",
-							HttpStatus.SC_INTERNAL_SERVER_ERROR);
+					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".");
 				} catch (IllegalAccessException e) {
-					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".",
-							HttpStatus.SC_INTERNAL_SERVER_ERROR);
+					throw new ParamConvertException(value + " can not be converted to "+paramInfo.getParamType().getName()+".");
 				}
 			}
 		}

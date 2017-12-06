@@ -27,7 +27,7 @@ public class EvergreenContextFactory implements ActionFactory {
 	public Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException {
 		if (definition == null) {
-			throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
+			throw new RequestMappingException("No mapping found for HTTP request with URI.");
 		}
 		Method method = definition.getMethod();
 		if (method != null)
@@ -35,7 +35,7 @@ public class EvergreenContextFactory implements ActionFactory {
 				return beanFactory.getBean(getBeanName(method));
 			} catch (BeanContainerException e) {
 				e.printStackTrace();
-				throw new RequestMappingException("No mapping found for HTTP request with URI.", HttpStatus.SC_NOT_FOUND);
+				throw new RequestMappingException("No mapping found for HTTP request with URI.");
 			}
 		return null;
 	}

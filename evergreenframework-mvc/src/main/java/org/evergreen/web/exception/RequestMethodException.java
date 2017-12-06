@@ -1,7 +1,5 @@
 package org.evergreen.web.exception;
 
-import org.evergreen.web.HttpStatus;
-
 public class RequestMethodException extends ActionException{
 
 	/**

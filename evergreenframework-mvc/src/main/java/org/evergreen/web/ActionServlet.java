@@ -83,8 +83,6 @@ public class ActionServlet extends FrameworkServlet {
      *
      * @param request
      * @param response
-     * @throws IOException
-     * @throws ActionException
      */
     private void initActionContext(HttpServletRequest request,
                                    HttpServletResponse response) {
