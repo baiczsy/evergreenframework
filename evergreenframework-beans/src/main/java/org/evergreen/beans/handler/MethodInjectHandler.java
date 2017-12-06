@@ -55,7 +55,7 @@ public class MethodInjectHandler extends AbstractInjectHandler {
         if (setMethod.getName().equals(setMethodName))
             return true;
         else
-            throw new NoSuchMethodException(setMethodName);
+            throw new NoSuchMethodException("Not a standard set method: "+setMethodName);
     }
 
 }
