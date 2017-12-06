@@ -44,12 +44,7 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
      * @param mapper
      */
     private void paramsConvert(ActionMapper mapper)  {
-        Object[] params = new Object[0];
-        try {
-            params = ParamConvertUtil.convert(mapper);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Object[] params = ParamConvertUtil.convert(mapper);
         mapper.setParams(params);
     }
 
