@@ -25,18 +25,14 @@ public class MethodInjectHandler extends AbstractInjectHandler {
                 Method setMethod = propertyDescriptor.getWriteMethod();
                 if (setMethod != null
                         && setMethod.isAnnotationPresent(Resource.class)) {
-                    // 验证set方法的合法性
-                    if (isSetMethod(propertyDescriptor.getName(), setMethod)) {
-                        // 获取该方法上的Inject注解
-                        Resource annotation = setMethod
-                                .getAnnotation(Resource.class);
-                        // 根据注解ref属性的值,从容器获取bean实例
-                        Object property = getBean(factory, annotation,
-                                setMethod.getParameterTypes()[0],
-                                propertyDescriptor.getName());
-                        // 最后将回调set方法将property注入
-                        setMethod.invoke(target, property);
-                    }
+                    // 获取该方法上的Inject注解
+                    Resource annotation = setMethod.getAnnotation(Resource.class);
+                    // 根据注解ref属性的值,从容器获取bean实例
+                    Object property = getBean(factory, annotation,
+                            setMethod.getParameterTypes()[0],
+                            propertyDescriptor.getName());
+                    // 最后将回调set方法将property注入
+                    setMethod.invoke(target, property);
                 }
             }
         } catch (Exception e) {
@@ -44,18 +40,4 @@ public class MethodInjectHandler extends AbstractInjectHandler {
         }
 
     }
-
-    // 验证set方法合法性
-    private boolean isSetMethod(String propertyName, Method setMethod)
-            throws SecurityException, NoSuchMethodException {
-        String firstChar = propertyName.substring(0, 1);
-        String setMethodName = "set"
-                + propertyName.replaceFirst(firstChar,
-                firstChar.toUpperCase());
-        if (setMethod.getName().equals(setMethodName))
-            return true;
-        else
-            throw new NoSuchMethodException("Not a standard set method: "+setMethodName);
-    }
-
 }
