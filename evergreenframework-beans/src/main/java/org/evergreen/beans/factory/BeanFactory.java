@@ -140,7 +140,7 @@ public abstract class BeanFactory {
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(PostConstruct.class))
-                definition.getInitMethos().add(method);
+                definition.getInitMethods().add(method);
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class BeanFactory {
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(PreDestroy.class))
-                definition.getDestroyMethos().add(method);
+                definition.getDestroyMethods().add(method);
         }
     }
 
@@ -272,7 +272,7 @@ public abstract class BeanFactory {
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         instance = getTargetInstance(instance);
-        for (Method method : definition.getInitMethos()) {
+        for (Method method : definition.getInitMethods()) {
             try {
                 method.invoke(instance);
             } catch (Exception e) {
@@ -335,7 +335,7 @@ public abstract class BeanFactory {
                 if (instance != null) {
                     instance = getTargetInstance(instance);
                     // 执行销毁前方法
-                    for (Method method : definition.getDestroyMethos()) {
+                    for (Method method : definition.getDestroyMethods()) {
                         method.invoke(instance);
                     }
                 }

@@ -25,12 +25,12 @@ public class BeanDefinition {
 	/**
 	 * bean的初始化方法
 	 */
-	private List<Method> initMethos = new ArrayList<Method>();
+	private List<Method> initMethods = new ArrayList<Method>();
 
 	/**
 	 * bean的销毁方法
 	 */
-	private List<Method> destroyMethos = new ArrayList<Method>();
+	private List<Method> destroyMethods = new ArrayList<Method>();
 
 	/**
 	 * 是否创建代理
@@ -54,12 +54,12 @@ public class BeanDefinition {
 		this.beanClass = beanClass;
 	}
 
-	public List<Method> getInitMethos() {
-		return initMethos;
+	public List<Method> getInitMethods() {
+		return initMethods;
 	}
 
-	public List<Method> getDestroyMethos() {
-		return destroyMethos;
+	public List<Method> getDestroyMethods() {
+		return destroyMethods;
 	}
 
 	public boolean isProxy() {
