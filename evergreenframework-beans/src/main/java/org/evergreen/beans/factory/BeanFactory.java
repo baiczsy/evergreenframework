@@ -192,8 +192,7 @@ public abstract class BeanFactory {
             injectProperty(definition.getBeanClass(), bean);
             return bean;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new CreateBeanException("Create bean instance fail.", e);
         }
     }
 
@@ -233,9 +232,8 @@ public abstract class BeanFactory {
             field.setAccessible(true);
             bean = field.get(invocationHandler);
             return bean;
-        } else {
-            return bean;
         }
+        return bean;
     }
 
     /**
@@ -276,7 +274,7 @@ public abstract class BeanFactory {
             try {
                 method.invoke(instance);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException("Init method callback fail.", e);
             }
         }
     }
@@ -340,7 +338,7 @@ public abstract class BeanFactory {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException("Destroy method callback fail.", e);
             }
         }
     }
