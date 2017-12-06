@@ -41,14 +41,8 @@ public abstract class BeanFactory {
      * @param path 扫描路径
      */
     public BeanFactory(String path) {
-        try {
-            Set<String> classNames = ScanUtil.scan(path);
-            initDefinitionMap(classNames);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (BeanDefinitionException e) {
-            e.printStackTrace();
-        }
+        Set<String> classNames = ScanUtil.scan(path);
+        initDefinitionMap(classNames);
     }
 
     /**
@@ -56,9 +50,9 @@ public abstract class BeanFactory {
      *
      * @throws ClassNotFoundException, BeanDefinitionException
      */
-    private void initDefinitionMap(Set<String> classNames) throws ClassNotFoundException, BeanDefinitionException {
+    private void initDefinitionMap(Set<String> classNames) {
         for (String className : classNames) {
-            Class<?> beanClass = Class.forName(className);
+            Class<?> beanClass = getClass(className);
             if (beanClass.isAnnotationPresent(Component.class)) {
                 String beanName = createBeanName(beanClass);
                 if (definitionMap.containsKey(beanName)) {
@@ -70,6 +64,14 @@ public abstract class BeanFactory {
                             createBeanDefinition(beanClass));
                 }
             }
+        }
+    }
+
+    private Class<?> getClass(String className){
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new BeanDefinitionException("Can not find the class name "+className+" to build the description");
         }
     }
 

@@ -43,9 +43,9 @@ public class DependencyInvoker {
 	// 执行注入操作
 	public Object inject() {
 		// 遍历ServiceLoader,取出每一个注入器执行
-		for (InjectHandler command : loaders)
-			// 执行命令
-			command.execute(target, targetClass, factory);
+		for (InjectHandler handler : loaders) {
+			handler.execute(target, targetClass, factory);
+		}
 		return target;
 	}
 }

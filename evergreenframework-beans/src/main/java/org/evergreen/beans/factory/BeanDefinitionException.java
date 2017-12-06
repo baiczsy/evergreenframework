@@ -10,4 +10,8 @@ public class BeanDefinitionException extends RuntimeException{
 	public BeanDefinitionException(String errorMessage){
 		super(errorMessage);
 	}
+
+	public BeanDefinitionException(String errorMessage, Throwable e){
+		super(errorMessage, e);
+	}
 }
