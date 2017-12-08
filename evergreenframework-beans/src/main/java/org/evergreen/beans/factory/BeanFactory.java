@@ -209,7 +209,7 @@ public abstract class BeanFactory {
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         bean = getTargetInstance(bean);
-        new DependencyInvoker(bean, beanClass, this).inject();
+        DependencyInvoker.inject(bean, beanClass, this);
     }
 
     /**
