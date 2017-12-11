@@ -15,13 +15,13 @@ public class AnnotationContextFactory extends BeanFactory {
 	}
 
 	/**
-	 * 初始化SINGLETON实例放入bean容器中 立即加载的方式会先初始化所有单例的Bean 并放入容器中
+	 * 初始化SINGLETON实例放入bean容器中 立即加载的方式会先初始化所有单例的Bean 并注册到容器中
 	 */
 	private void initSingleton() {
 		for (String beanName : definitionMap.keySet()) {
 			BeanDefinition definition = definitionMap.get(beanName);
 			if (ScopeType.SINGLETON.equals(definition.getScope())) {
-				buildToContainer(beanName, definition);
+				registerBeanDefinition(beanName, definition);
 			}
 		}
 	}

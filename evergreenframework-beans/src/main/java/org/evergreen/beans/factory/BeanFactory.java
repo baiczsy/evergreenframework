@@ -169,9 +169,9 @@ public abstract class BeanFactory {
     }
 
     /**
-     * 创建Bean并放入容器
+     * 将Bean注册到容器中
      */
-    Object buildToContainer(String beanName, BeanDefinition definition) {
+    Object registerBeanDefinition(String beanName, BeanDefinition definition) {
         Object bean = createBean(definition);
         // 将bean实例放入bean容器中
         beansMap.put(beanName, bean);

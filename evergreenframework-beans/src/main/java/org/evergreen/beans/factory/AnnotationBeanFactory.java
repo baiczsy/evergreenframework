@@ -25,7 +25,7 @@ public class AnnotationBeanFactory extends BeanFactory {
 				return beansMap.get(beanName);
 			} else {
 				synchronized (beansMap) {
-					return buildToContainer(beanName, definition);
+					return registerBeanDefinition(beanName, definition);
 				}
 			}
 		//否则以原型的方式创建Bean实例
