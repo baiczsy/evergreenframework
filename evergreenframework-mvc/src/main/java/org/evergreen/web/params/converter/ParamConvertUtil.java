@@ -6,9 +6,21 @@ import org.evergreen.web.HttpStatus;
 import org.evergreen.web.exception.ParamConvertException;
 import org.evergreen.web.params.ParamInfo;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 
 public class ParamConvertUtil {
+
+    private static List<ParamsConvertHandler> handlers = new ArrayList<ParamsConvertHandler>();
+
+    static {
+        Iterator<ParamsConvertHandler> iterator = ServiceLoader.load(ParamsConvertHandler.class).iterator();
+        while(iterator.hasNext()){
+            handlers.add(iterator.next());
+        }
+    }
 
     public static Object[] convert(ActionMapper mapper) {
         ActionDefinition definition = mapper.getDefinition();
@@ -24,10 +36,7 @@ public class ParamConvertUtil {
 
     // 执行批量参数映射
     private static Object doExecute(ParamInfo paramInfo) {
-        // 使用ServiceLoader来加载SPI实现类
-        // 对应的实现类名称必须放在META-INF\services目录下
-        ServiceLoader<ParamsConvertHandler> loader = ServiceLoader.load(ParamsConvertHandler.class);
-        for (ParamsConvertHandler handler : loader) {
+        for (ParamsConvertHandler handler : handlers) {
             Object param = handler.execute(paramInfo);
             // 如果映射成功,则返回该参数,如果为null,
             // 则继续循环使用下一个命令执行映射
