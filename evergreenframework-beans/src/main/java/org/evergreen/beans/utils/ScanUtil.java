@@ -2,8 +2,10 @@ package org.evergreen.beans.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -41,7 +43,7 @@ public class ScanUtil {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e.getMessage(), e);
 		}
 		return classNames;
 	}
@@ -52,7 +54,9 @@ public class ScanUtil {
 	 * @param filePath 文件目录
 	 * @param packageName 包名
 	 */
-	private static void scanFromDir(String filePath, String packageName) {
+	private static void scanFromDir(String filePath, String packageName) throws UnsupportedEncodingException {
+		filePath = URLDecoder.decode(filePath, "utf-8");
+		packageName = URLDecoder.decode(packageName, "utf-8");
 		File[] files = new File(filePath).listFiles();
 		packageName = packageName + ".";
 		for (File childFile : files) {

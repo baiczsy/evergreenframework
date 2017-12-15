@@ -1,7 +1,9 @@
 package org.evergreen.web.utils;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -22,7 +24,11 @@ public class ScanUtil {
 	public static List<String> scanPackage() {
 		URL url = Thread.currentThread().getContextClassLoader().getResource(DEFAULT_PATH);
 		if (url != null) {
-			scanPackage(url.getPath(), DEFAULT_PATH);
+			try {
+				scanPackage(url.getPath(), DEFAULT_PATH);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		}
 		return classNames;
 	}
@@ -33,7 +39,9 @@ public class ScanUtil {
 	 * @param filePath 文件目录
 	 * @param packageName 包名
 	 */
-	private static void scanPackage(String filePath, String packageName) {
+	private static void scanPackage(String filePath, String packageName) throws UnsupportedEncodingException {
+		filePath = URLDecoder.decode(filePath, "utf-8");
+		packageName = URLDecoder.decode(packageName, "utf-8");
 		File[] files = new File(filePath).listFiles();
 		packageName = packageName + ".";
 		for (File childFile : files) {
