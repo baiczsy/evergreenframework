@@ -43,7 +43,7 @@ public class ScanUtil {
 				}
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new RuntimeException("Resolve path error.", e);
 		}
 		return classNames;
 	}

@@ -27,7 +27,7 @@ public class ScanUtil {
 			try {
 				scanPackage(url.getPath(), DEFAULT_PATH);
 			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e.getMessage(), e);
+				throw new RuntimeException("Resolve path error.", e);
 			}
 		}
 		return classNames;
