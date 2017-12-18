@@ -27,15 +27,16 @@ public class AnnotationContextFactory extends BeanFactory {
 	}
 
 	/**
-	 * 从容器中获取Bean实例
-	 * 如果容器存在单例的Bean,则从容器中直接返回
+	 * 从容器中获取Bean的BeanDefinition
+	 * 如果Bean的BeanDefinition的scope为singleton,则从singletonMap中获取单例
 	 * 否则以原型的方式创建并返回
 	 */
 	protected Object doGetBean(String beanName) {
-		// 如果容器存在单例的Bean,不为空则从容器中直接返回,否则以原型创建实力并返回
-		Object bean = beansMap.get(beanName);
-		if (bean == null) {
-			BeanDefinition definition = definitionMap.get(beanName);
+		BeanDefinition definition = getBeanDefinition(beanName);
+		Object bean = null;
+		if(ScopeType.SINGLETON.equals(definition.getScope())){
+			bean = beansMap.get(beanName);
+		} else {
 			bean = createBean(definition);
 		}
 		return bean;

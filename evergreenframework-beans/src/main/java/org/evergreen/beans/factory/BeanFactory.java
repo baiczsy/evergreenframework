@@ -344,6 +344,19 @@ public abstract class BeanFactory {
     }
 
     /**
+     * 依据beanName获取BeanDefinition
+     * @param beanName
+     * @return
+     */
+    protected BeanDefinition getBeanDefinition(String beanName){
+        BeanDefinition beanDefinition = definitionMap.get(beanName);
+        if (beanDefinition == null) {
+            throw new RuntimeException("Can not find bean by " + beanName);
+        }
+        return beanDefinition;
+    }
+
+    /**
      * 获取bean实例
      *
      * @param beanName
