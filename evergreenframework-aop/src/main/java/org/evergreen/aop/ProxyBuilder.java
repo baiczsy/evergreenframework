@@ -20,7 +20,7 @@ public class ProxyBuilder {
 	private Class<?> targetClass;
 
 	/**
-	 * 代理类型的实例(JDK代理或者是CGLIB代理)
+	 * 代理构建处理器实例(JDK代理或者是CGLIB代理)
 	 */
 	private ProxyHandler aopHandler;
 
