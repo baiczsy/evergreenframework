@@ -78,9 +78,8 @@ public class ScanUtil {
 	/**
 	 * 扫描jar文件
 	 * @param jarFile
-	 * @throws IOException
 	 */
-	private static void scanFromJar(JarFile jarFile) throws IOException {
+	private static void scanFromJar(JarFile jarFile) {
 		Enumeration<JarEntry> files = jarFile.entries();
 		while (files.hasMoreElements()) {
 			JarEntry entry = files.nextElement();
