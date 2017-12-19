@@ -91,12 +91,4 @@ public class ScanUtil {
 		}
 	}
 
-
-	public static void main(String[] args) throws Exception {
-		Set<String> classNames = scan("org.evergreen");
-		for (String className : classNames) {
-			System.out.println(className);
-		}
-	}
-
 }
