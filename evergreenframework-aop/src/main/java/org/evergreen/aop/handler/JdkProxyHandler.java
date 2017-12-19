@@ -14,12 +14,12 @@ public class JdkProxyHandler implements ProxyHandler {
 	 * 使用JDK动态代理
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T createProxy(Class<T> beanClass) {
+	public <T> T createProxy(Class<T> targetClass) {
 		try {
-			Object beanInstance = beanClass.newInstance();
-			JdkInvocationHandler handler = new JdkInvocationHandler(beanInstance);
-			return (T)Proxy.newProxyInstance(beanInstance.getClass().getClassLoader(),
-					beanInstance.getClass().getInterfaces(), handler);
+			Object targetInstance = targetClass.newInstance();
+			JdkInvocationHandler handler = new JdkInvocationHandler(targetInstance);
+			return (T)Proxy.newProxyInstance(targetInstance.getClass().getClassLoader(),
+					targetInstance.getClass().getInterfaces(), handler);
 		} catch (Exception e) {
 			throw new RuntimeException("Create JdkProxyHandler fail.", e);
 		}

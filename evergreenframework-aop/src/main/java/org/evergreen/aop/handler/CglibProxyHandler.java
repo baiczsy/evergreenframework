@@ -14,11 +14,11 @@ public class CglibProxyHandler implements ProxyHandler {
 	 * 使用cglib动态代理
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T createProxy(Class<T> beanClass) {
+	public <T> T createProxy(Class<T> targetClass) {
 		try {
 			Enhancer enhancer = new Enhancer();
-			enhancer.setSuperclass(beanClass);
-			enhancer.setCallback(new CglibInvocationHandler(beanClass.newInstance()));
+			enhancer.setSuperclass(targetClass);
+			enhancer.setCallback(new CglibInvocationHandler(targetClass.newInstance()));
 			return (T)enhancer.create();
 		} catch (Exception e) {
 			throw new RuntimeException("Create CglibProxyHandler fail.", e);

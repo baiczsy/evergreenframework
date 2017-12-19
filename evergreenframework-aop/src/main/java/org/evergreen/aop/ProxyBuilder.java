@@ -17,15 +17,15 @@ public class ProxyBuilder {
 	/**
 	 * 目标对象
 	 */
-	private Class<?> beanClass;
+	private Class<?> targetClass;
 
 	/**
 	 * 代理类型的实例(JDK代理或者是CGLIB代理)
 	 */
 	private ProxyHandler aopHandler;
 
-	public ProxyBuilder(Class<?> beanClass) {
-		this.beanClass = beanClass;
+	public ProxyBuilder(Class<?> targetClass) {
+		this.targetClass = targetClass;
 		aopHandler = createProxyHandler();
 	}
 
@@ -37,7 +37,7 @@ public class ProxyBuilder {
 	 */
 	private ProxyHandler createProxyHandler() {
 		if(isInterceptorClass() || isInterceptorMethod()){
-			return beanClass.getInterfaces().length > 0 ? new JdkProxyHandler() : new CglibProxyHandler();
+			return targetClass.getInterfaces().length > 0 ? new JdkProxyHandler() : new CglibProxyHandler();
 		}
 		throw new RuntimeException("Invalid target object.");
 	}
@@ -48,7 +48,7 @@ public class ProxyBuilder {
 	 * @return
 	 */
 	private boolean isInterceptorClass() {
-		return beanClass.isAnnotationPresent(Interceptors.class) ? true : false;
+		return targetClass.isAnnotationPresent(Interceptors.class) ? true : false;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ProxyBuilder {
 	 * @return
 	 */
 	private boolean isInterceptorMethod() {
-		for (Method method : beanClass.getMethods()) {
+		for (Method method : targetClass.getMethods()) {
 			if (method.isAnnotationPresent(Interceptors.class)) {
 				return true;
 			}
@@ -72,6 +72,6 @@ public class ProxyBuilder {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T createProxy() {
-		return (T)aopHandler.createProxy(beanClass);
+		return (T)aopHandler.createProxy(targetClass);
 	}
 }
