@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 /**
  * 通知描述，包含通知以及切面实例
  */
-public class AdviceInfo {
+class AdviceInfo {
 
     /**
      * 通知
