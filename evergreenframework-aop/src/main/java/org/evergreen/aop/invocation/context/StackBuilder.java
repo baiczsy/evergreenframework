@@ -16,11 +16,11 @@ class StackBuilder {
      */
     public static Stack<AdviceInfo> createAdviceStack(Method method){
         Stack<AdviceInfo> stack = new Stack<AdviceInfo>();
-        if (method.isAnnotationPresent(Interceptors.class)) {
-            resolve(method.getAnnotation(Interceptors.class), stack);
-        }
         if(method.getDeclaringClass().isAnnotationPresent(Interceptors.class)){
             resolve(method.getDeclaringClass().getAnnotation(Interceptors.class), stack);
+        }
+        if (method.isAnnotationPresent(Interceptors.class)) {
+            resolve(method.getAnnotation(Interceptors.class), stack);
         }
         return stack;
     }
