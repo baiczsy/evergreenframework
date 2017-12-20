@@ -26,7 +26,7 @@ public abstract class InvocationContextImpl implements InvocationContext {
     /**
      * 环绕通知栈
      */
-    private Stack<Method> stack;
+    private Stack<AdviceInfo> stack;
 
     /**
      * 获取目标对象的所有参数
@@ -53,13 +53,13 @@ public abstract class InvocationContextImpl implements InvocationContext {
         this.target = target;
         this.method = method;
         this.parameters = parameters;
-        createStack();
+        initAdviceStack();
     }
 
     /**
      * 创建环绕通知栈
      */
-    private void createStack() {
+    private void initAdviceStack() {
         stack = StackBuilder.createAdviceStack(method);
     }
 
@@ -69,7 +69,6 @@ public abstract class InvocationContextImpl implements InvocationContext {
      * 否则直接回调目标行为
      *
      * @return Object
-     * @throws Throwable
      */
     public Object invoke() throws Throwable {
         if (!method.getDeclaringClass().equals(Object.class) && !method.isAnnotationPresent(Exclude.class)) {
@@ -86,8 +85,8 @@ public abstract class InvocationContextImpl implements InvocationContext {
     public Object proceed() throws Throwable {
         // 如果环绕通知栈不为空，则执行栈中的通知方法
         if (!stack.empty()) {
-            Method advice = stack.pop();
-            return advice.invoke(advice.getDeclaringClass().newInstance(), this);
+            AdviceInfo adviceInfo = stack.pop();
+            return adviceInfo.getAdvice().invoke(adviceInfo.getAspectInstance(), this);
         }
         // 拦截器栈执行完成后，则继续调用目标对象的方法
         return invokeTarget();
