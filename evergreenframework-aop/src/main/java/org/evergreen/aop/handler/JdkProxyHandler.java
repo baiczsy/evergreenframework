@@ -18,8 +18,8 @@ public class JdkProxyHandler implements ProxyHandler {
 		try {
 			Object targetInstance = targetClass.newInstance();
 			JdkInvocationHandler handler = new JdkInvocationHandler(targetInstance);
-			return (T)Proxy.newProxyInstance(targetInstance.getClass().getClassLoader(),
-					targetInstance.getClass().getInterfaces(), handler);
+			return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+					targetClass.getInterfaces(), handler);
 		} catch (Exception e) {
 			throw new RuntimeException("Create JdkProxyHandler fail.", e);
 		}
