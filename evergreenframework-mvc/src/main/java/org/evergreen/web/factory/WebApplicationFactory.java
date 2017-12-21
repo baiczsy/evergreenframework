@@ -18,8 +18,7 @@ public class WebApplicationFactory implements ActionFactory {
 	 * @throws ActionException
 	 * @throws IOException
 	 */
-	public Object crateAction(ActionDefinition definition)
-			throws IOException, ActionException {
+	public Object crateAction(ActionDefinition definition) throws ActionException {
 		if (definition != null) {
 			try {
 				return definition.getActionClass().newInstance();

@@ -24,19 +24,18 @@ public class EvergreenContextFactory implements ActionFactory {
 		return beanFactory;
 	}
 
-	public Object crateAction(ActionDefinition definition)
-			throws IOException, ActionException {
+	public Object crateAction(ActionDefinition definition) throws ActionException {
 		if (definition == null) {
 			throw new RequestMappingException("No mapping found for HTTP request with URI.");
 		}
 		Method method = definition.getMethod();
-		if (method != null)
+		if (method != null) {
 			try {
 				return beanFactory.getBean(getBeanName(method));
 			} catch (BeanContainerException e) {
-				e.printStackTrace();
-				throw new RequestMappingException("No mapping found for HTTP request with URI.");
+				throw new RequestMappingException("No mapping found for HTTP request with URI.", e);
 			}
+		}
 		return null;
 	}
 
