@@ -30,12 +30,8 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
                 .getContext().get(FrameworkServlet.REQUEST);
         ActionFactory actionFactory = (ActionFactory) request
                 .getServletContext().getAttribute(FrameworkServlet.ACTION_FACTORY);
-        Object targetAction = null;
-            targetAction = actionFactory
+        Object targetAction = actionFactory
                     .crateAction(mapper.getDefinition());
-        if (targetAction == null) {
-            throw new TargetActionException("Can not find the target action.");
-        }
         mapper.setTarget(targetAction);
     }
 

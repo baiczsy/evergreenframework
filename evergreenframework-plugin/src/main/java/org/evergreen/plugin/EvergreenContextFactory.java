@@ -5,47 +5,39 @@ import org.evergreen.beans.factory.BeanFactory;
 import org.evergreen.plugin.utils.BeanNameUtil;
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.ActionFactory;
-import org.evergreen.web.HttpStatus;
 import org.evergreen.web.exception.ActionException;
-import org.evergreen.web.exception.RequestMappingException;
-
-import java.io.IOException;
+import org.evergreen.web.exception.TargetActionException;
 import java.lang.reflect.Method;
 
 public class EvergreenContextFactory implements ActionFactory {
 
-	private BeanFactory beanFactory;
+    private BeanFactory beanFactory;
 
-	public EvergreenContextFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
-	}
+    public EvergreenContextFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
 
-	public BeanFactory getBeanFactory() {
-		return beanFactory;
-	}
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
 
-	public Object crateAction(ActionDefinition definition) throws ActionException {
-		if (definition == null) {
-			throw new RequestMappingException("No mapping found for HTTP request with URI.");
-		}
-		Method method = definition.getMethod();
-		if (method != null) {
-			try {
-				return beanFactory.getBean(getBeanName(method));
-			} catch (BeanContainerException e) {
-				throw new RequestMappingException("No mapping found for HTTP request with URI.", e);
-			}
-		}
-		return null;
-	}
+    public Object crateAction(ActionDefinition definition) throws ActionException {
+        Method method = definition.getMethod();
+        try {
+            String beanName = getBeanName(method);
+            return beanFactory.getBean(beanName);
+        } catch (BeanContainerException e) {
+            throw new TargetActionException("Create target action handler fail.", e);
+        }
+    }
 
-	protected String getBeanName(Method method) throws BeanContainerException {
-		if (method.getDeclaringClass().getAnnotation(Component.class) == null)
-			throw new BeanContainerException();
-		String beanName = method.getDeclaringClass()
-				.getAnnotation(Component.class).value();
-		beanName = ("".equals(beanName)) ? BeanNameUtil.toLowerBeanName((method
-				.getDeclaringClass().getSimpleName())) : beanName;
-		return beanName;
-	}
+    protected String getBeanName(Method method) throws BeanContainerException {
+        if (method.getDeclaringClass().getAnnotation(Component.class) == null)
+            throw new BeanContainerException();
+        String beanName = method.getDeclaringClass()
+                .getAnnotation(Component.class).value();
+        beanName = ("".equals(beanName)) ? BeanNameUtil.toLowerBeanName((method
+                .getDeclaringClass().getSimpleName())) : beanName;
+        return beanName;
+    }
 }

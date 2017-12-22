@@ -29,7 +29,7 @@ public class DefaultHandlerMapping implements HandlerMapping {
                     isRequestMethod = true;
                     // 将请求url和匹配的url放入当前请求作用域,用于后面做restful参数映射
                     saveRestPath(actionDefinition.getUrlPattern(), urlPattern);
-                    //将definition对象封装到ActionMapping中并返回
+                    //将definition对象封装到ActionMapper中并返回
                     mapper.setDefinition(actionDefinition);
                 }
             }
