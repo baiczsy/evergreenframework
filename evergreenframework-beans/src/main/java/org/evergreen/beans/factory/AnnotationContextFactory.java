@@ -38,16 +38,6 @@ public class AnnotationContextFactory extends BeanFactory {
 			BeanDefinition definition = getBeanDefinition(beanName);
 			return createBean(definition);
 		}
-
-		/*BeanDefinition definition = getBeanDefinition(beanName);
-		Object bean = null;
-		if(ScopeType.SINGLETON.equals(definition.getScope())){
-			bean = beansMap.get(beanName);
-			System.out.println(beanName+" : "+bean);
-		} else {
-			bean = createBean(definition);
-		}
-		return bean;*/
 	}
 
 }
