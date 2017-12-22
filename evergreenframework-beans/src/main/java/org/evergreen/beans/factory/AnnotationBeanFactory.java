@@ -21,7 +21,7 @@ public class AnnotationBeanFactory extends BeanFactory {
 		//如果是描述中指定的作用域为单例,那么将创建一个Bean实例,然后再放入容器
 		if (ScopeType.SINGLETON.equals(definition.getScope())) {
 			//如果容器中存在单例的Bean实例,直接从容器中获取,否则创建一个Bean实例放入容器中并返回
-			if (beansMap.get(beanName) != null) {
+			if (beansMap.containsKey(beanName)) {
 				return beansMap.get(beanName);
 			} else {
 				synchronized (beansMap) {

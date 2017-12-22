@@ -32,12 +32,12 @@ public class AnnotationContextFactory extends BeanFactory {
 	 * 否则以原型的方式创建并返回
 	 */
 	protected Object doGetBean(String beanName) {
-		if(beansMap.containsKey(beanName)){
+		BeanDefinition definition = getBeanDefinition(beanName);
+		if(ScopeType.SINGLETON.equals(definition.getScope())
+				&& beansMap.containsKey(beanName)){
 			return beansMap.get(beanName);
-		} else {
-			BeanDefinition definition = getBeanDefinition(beanName);
-			return createBean(definition);
 		}
+		return createBean(definition);
 	}
 
 }
