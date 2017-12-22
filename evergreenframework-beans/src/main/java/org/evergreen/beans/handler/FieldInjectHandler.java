@@ -1,8 +1,5 @@
 package org.evergreen.beans.handler;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 import javax.annotation.Resource;
@@ -23,10 +20,8 @@ public class FieldInjectHandler extends AbstractInjectHandler {
                 // 获取该属性上的Resource注解
                 Resource annotation = field.getAnnotation(Resource.class);
                 // 根据注解ref属性的值,从容器获取bean实例(递归调用)
-                Object property = getBean(factory, annotation,
-                        field.getType(), field.getName());
-                // 如果属性是私有的,先打开访问开关
-                field.setAccessible(true);
+                Object property = getBean(factory, annotation, field.getType(),
+                        field.getName());
                 // 给当前的field属性赋值(注入)
                 injectField(field, target, property);
             }

@@ -171,11 +171,10 @@ public abstract class BeanFactory {
     /**
      * 将Bean注册到容器中
      */
-    Object registerBeanDefinition(String beanName, BeanDefinition definition) {
+    void registerBeanDefinition(String beanName, BeanDefinition definition) {
         Object bean = createBean(definition);
         // 将bean实例放入bean容器中
         beansMap.put(beanName, bean);
-        return bean;
     }
 
     /**
@@ -208,7 +207,7 @@ public abstract class BeanFactory {
     private void injectProperty(Class<?> beanClass, Object bean)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
-        bean = getTargetInstance(bean);
+        bean = getJdkProxyTarget(bean);
         DependencyInvoker.inject(bean, beanClass, this);
     }
 
@@ -222,7 +221,7 @@ public abstract class BeanFactory {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private Object getTargetInstance(Object bean) throws NoSuchFieldException,
+    private Object getJdkProxyTarget(Object bean) throws NoSuchFieldException,
             SecurityException, IllegalArgumentException, IllegalAccessException {
         if (Proxy.isProxyClass(bean.getClass())) {
             InvocationHandler invocationHandler = Proxy
@@ -269,7 +268,7 @@ public abstract class BeanFactory {
     private void executeInitMethods(Object instance, BeanDefinition definition)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
-        instance = getTargetInstance(instance);
+        instance = getJdkProxyTarget(instance);
         for (Method method : definition.getInitMethods()) {
             try {
                 method.invoke(instance);
@@ -331,7 +330,7 @@ public abstract class BeanFactory {
             try {
                 Object instance = beansMap.get(key);
                 if (instance != null) {
-                    instance = getTargetInstance(instance);
+                    instance = getJdkProxyTarget(instance);
                     // 执行销毁前方法
                     for (Method method : definition.getDestroyMethods()) {
                         method.invoke(instance);

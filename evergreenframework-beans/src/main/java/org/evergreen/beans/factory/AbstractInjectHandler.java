@@ -21,15 +21,15 @@ public abstract class AbstractInjectHandler implements InjectHandler {
 	protected Object getBean(BeanFactory factory, Resource annotation,
 			Class<?> resourceType, String resourceName) {
 		// 按name属性查找
-		if (!"".equals(annotation.name()) && annotation.type() == Object.class) {
+		if (!"".equals(annotation.name()) && annotation.type().equals(Object.class)) {
 			return getByName(factory, annotation.name());
 		}
 		// 按type属性查找
-		if ("".equals(annotation.name()) && annotation.type() != Object.class) {
+		if ("".equals(annotation.name()) && !annotation.type().equals(Object.class)) {
 			return getByType(factory, annotation.type(), resourceType);
 		}
 		// 按name和type查找
-		if (!"".equals(annotation.name()) && annotation.type() != Object.class) {
+		if (!"".equals(annotation.name()) && !annotation.type().equals(Object.class)) {
 			return getByNameType(factory, annotation.name(), annotation.type(),
 					resourceType);
 			// 默认匹配查找
@@ -44,13 +44,14 @@ public abstract class AbstractInjectHandler implements InjectHandler {
 	 * @param factory
 	 * @param name
 	 * @return
-	 * @throws NoSuchBeanDefinitionException
+	 * @throws NoSuchBeanException
 	 */
 	private Object getByName(BeanFactory factory, String name)
-			throws NoSuchBeanDefinitionException {
-		if (factory.getDefinitionMap().containsKey(name))
+			throws NoSuchBeanException {
+		if (factory.getDefinitionMap().containsKey(name)) {
 			return factory.getBean(name);
-		throw new NoSuchBeanDefinitionException("No bean named '" + name
+		}
+		throw new NoSuchBeanException("No bean named '" + name
 				+ "' is defined");
 	}
 
@@ -89,7 +90,7 @@ public abstract class AbstractInjectHandler implements InjectHandler {
 			throw new ClassCastException(annotationType.getName()
 					+ " cannot be cast to " + resourceType.getName());
 		}
-		throw new NoSuchBeanDefinitionException("No bean named '" + name
+		throw new NoSuchBeanException("No bean named '" + name
 				+ "' is defined");
 	}
 
@@ -104,15 +105,16 @@ public abstract class AbstractInjectHandler implements InjectHandler {
 			String resourceName) {
 		Map<String, BeanDefinition> definitionMap = factory.getDefinitionMap();
 		// 先根据字段名查找,如果在容器中检索到,直接返回
-		if (definitionMap.get(resourceName) != null)
+		if (definitionMap.containsKey(resourceName)) {
 			return factory.getBean(resourceName);
+		}
 		// 在容器中检索不到,则按类型查找
 		for (String key : definitionMap.keySet()) {
 			if (resourceType.isAssignableFrom(definitionMap.get(key)
 					.getBeanClass()))
 				return factory.getBean(key);
 		}
-		throw new BeanCreationException(
+		throw new NoSuchBeanException(
 				"Can not find the components,injection of resource dependencies failed");
 	}
 
