@@ -1,7 +1,6 @@
 package org.evergreen.web.handler;
 
 import org.evergreen.web.*;
-import org.evergreen.web.exception.TargetActionException;
 import org.evergreen.web.params.validate.HibernateBeanValidate;
 import org.evergreen.web.params.converter.ParamConvertUtil;
 
@@ -28,9 +27,9 @@ public class DefaultHandlerInvoker implements HandlerInvoker{
     private void getAction(ActionMapper mapper) throws IOException{
         HttpServletRequest request = (HttpServletRequest) ActionContext
                 .getContext().get(FrameworkServlet.REQUEST);
-        ActionFactory actionFactory = (ActionFactory) request
-                .getServletContext().getAttribute(FrameworkServlet.ACTION_FACTORY);
-        Object targetAction = actionFactory
+        HandlerFactory handlerFactory = (HandlerFactory) request
+                .getServletContext().getAttribute(FrameworkServlet.HANDLER_FACTORY);
+        Object targetAction = handlerFactory
                     .crateAction(mapper.getDefinition());
         mapper.setTarget(targetAction);
     }

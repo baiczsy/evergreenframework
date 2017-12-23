@@ -9,7 +9,7 @@ import org.evergreen.web.exception.ActionException;
  * @author ThinkPad
  *
  */
-public interface ActionFactory {
+public interface HandlerFactory {
 
 	Object crateAction(ActionDefinition definition)
 			throws IOException, ActionException;

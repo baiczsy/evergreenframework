@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.evergreen.web.annotation.RequestMapping;
-import org.evergreen.web.factory.WebApplicationFactory;
+import org.evergreen.web.factory.WebAppHandlerFactory;
 import org.evergreen.web.params.ParamInfo;
 import org.evergreen.web.utils.CollectionUtils;
 import org.evergreen.web.utils.ParamNameUtil;
@@ -85,7 +85,7 @@ public abstract class FrameworkServlet extends HttpServlet {
     /**
      * Action实例工厂
      */
-    public final static String ACTION_FACTORY = "org.evergreen.web.actionFactory";
+    public final static String HANDLER_FACTORY = "org.evergreen.web.handlerFactory";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -95,7 +95,7 @@ public abstract class FrameworkServlet extends HttpServlet {
         // 初始化ActionDefinitions
         initActionDefinitions(config);
         // 初始化action工厂
-        initActionFactory(config.getServletContext());
+        initHandlerFactory(config.getServletContext());
         // 初始化线程池
         initAsyncThreadPool(config.getServletContext());
     }
@@ -154,9 +154,9 @@ public abstract class FrameworkServlet extends HttpServlet {
      * 如果使用了IOC容器,那么action实例将从IOC容器中获取
      * 否则action实例将由框架中的WebApplicationFactory来构建
      */
-    private void initActionFactory(ServletContext servletContext) {
-        if (servletContext.getAttribute(FrameworkServlet.ACTION_FACTORY) == null) {
-            servletContext.setAttribute(FrameworkServlet.ACTION_FACTORY, new WebApplicationFactory());
+    private void initHandlerFactory(ServletContext servletContext) {
+        if (servletContext.getAttribute(FrameworkServlet.HANDLER_FACTORY) == null) {
+            servletContext.setAttribute(FrameworkServlet.HANDLER_FACTORY, new WebAppHandlerFactory());
         }
     }
 

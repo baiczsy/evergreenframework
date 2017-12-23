@@ -3,11 +3,11 @@ package org.evergreen.web.factory;
 import java.io.IOException;
 
 import org.evergreen.web.ActionDefinition;
-import org.evergreen.web.ActionFactory;
+import org.evergreen.web.HandlerFactory;
 import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.exception.TargetActionException;
 
-public class WebApplicationFactory implements ActionFactory {
+public class WebAppHandlerFactory implements HandlerFactory {
 
 	/**
 	 * 从ServletContext中初始化action方法

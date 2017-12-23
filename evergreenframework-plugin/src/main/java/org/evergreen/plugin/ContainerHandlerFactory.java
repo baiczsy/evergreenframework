@@ -4,16 +4,16 @@ import org.evergreen.beans.annotation.Component;
 import org.evergreen.beans.factory.BeanFactory;
 import org.evergreen.plugin.utils.BeanNameUtil;
 import org.evergreen.web.ActionDefinition;
-import org.evergreen.web.ActionFactory;
+import org.evergreen.web.HandlerFactory;
 import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.exception.TargetActionException;
 import java.lang.reflect.Method;
 
-public class EvergreenContextFactory implements ActionFactory {
+public class ContainerHandlerFactory implements HandlerFactory {
 
     private BeanFactory beanFactory;
 
-    public EvergreenContextFactory(BeanFactory beanFactory) {
+    public ContainerHandlerFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -21,6 +21,12 @@ public class EvergreenContextFactory implements ActionFactory {
         return beanFactory;
     }
 
+    /**
+     * 从容器中获取Bean实例
+     * @param definition
+     * @return
+     * @throws ActionException
+     */
     public Object crateAction(ActionDefinition definition) throws ActionException {
         Method method = definition.getMethod();
         try {
@@ -31,6 +37,12 @@ public class EvergreenContextFactory implements ActionFactory {
         }
     }
 
+    /**
+     * 获取@Component注解中的Bean名称
+     * @param method
+     * @return
+     * @throws BeanContainerException
+     */
     protected String getBeanName(Method method) throws BeanContainerException {
         if (method.getDeclaringClass().getAnnotation(Component.class) == null)
             throw new BeanContainerException();

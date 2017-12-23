@@ -22,6 +22,11 @@ public class ParamConvertUtil {
         }
     }
 
+    /**
+     * 类型转换
+     * @param mapper
+     * @return
+     */
     public static Object[] convert(ActionMapper mapper) {
         ActionDefinition definition = mapper.getDefinition();
         Object[] params = new Object[definition.getParamInfo().size()];
@@ -29,12 +34,15 @@ public class ParamConvertUtil {
             ParamInfo paramInfo = definition.getParamInfo().get(i);
             params[i] = doExecute(paramInfo);
             // 如果映射参数不成功,且参数类型是基本类型,则抛出异常信息
-            isPrimitive(params[i], paramInfo);
+            if (params[i] == null && paramInfo.getParamType().isPrimitive()) {
+                throw new ParamConvertException("Optional " + paramInfo.getParamType().getName() +
+                        " parameter " + paramInfo.getParamName() +
+                        " is present but cannot be translated into a null value due to being declared as a primitive type.");
+            }
         }
         return params;
     }
 
-    // 执行批量参数映射
     private static Object doExecute(ParamInfo paramInfo) {
         for (ParamsConvertHandler handler : handlers) {
             Object param = handler.execute(paramInfo);
@@ -44,12 +52,5 @@ public class ParamConvertUtil {
                 return param;
         }
         return null;
-    }
-
-    // 抛出基本类型的异常信息
-    private static void isPrimitive(Object param, ParamInfo paramInfo) {
-        if (param == null && paramInfo.getParamType().isPrimitive())
-            throw new ParamConvertException("Optional "+paramInfo.getParamType().getName()+" parameter "+ paramInfo.getParamName()+ " is present but cannot be translated into a null value due to being declared as a primitive type.");
-
     }
 }
