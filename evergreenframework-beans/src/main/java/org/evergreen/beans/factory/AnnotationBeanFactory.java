@@ -24,17 +24,27 @@ public class AnnotationBeanFactory extends BeanFactory {
 			if (beansMap.containsKey(beanName)) {
 				return beansMap.get(beanName);
 			} else {
-				synchronized (beansMap) {
-					registerSingleton(beanName, definition);
-					Object bean = beansMap.get(beanName);
-					injectProperty(definition.getBeanClass(), bean);
-					return bean;
-				}
+				return assemblySingleton(beanName, definition);
 			}
 		} else {
 			//否则以原型的方式装配Bean实例
 			return assemblyPrototype(definition);
 		}
 	}
+
+    /**
+     * 装配单例
+     * @param beanName
+     * @param definition
+     * @return
+     */
+	private Object assemblySingleton(String beanName, BeanDefinition definition){
+        synchronized (beansMap) {
+            registerSingleton(beanName, definition);
+            Object bean = beansMap.get(beanName);
+            injectProperty(definition.getBeanClass(), bean);
+            return bean;
+        }
+    }
 
 }
