@@ -1,4 +1,4 @@
-package org.evergreen.beans.factory;
+package org.evergreen.beans.factory.exception;
 
 public class BeanDefinitionException extends RuntimeException{
 

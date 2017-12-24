@@ -1,5 +1,7 @@
 package org.evergreen.beans.factory;
 
+import org.evergreen.beans.factory.exception.NoSuchBeanException;
+
 import java.util.Map;
 
 import javax.annotation.Resource;

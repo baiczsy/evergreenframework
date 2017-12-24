@@ -3,6 +3,9 @@ package org.evergreen.beans.factory;
 import org.evergreen.beans.annotation.Component;
 import org.evergreen.beans.annotation.Scope;
 import org.evergreen.beans.annotation.ScopeType;
+import org.evergreen.beans.factory.exception.BeanDefinitionException;
+import org.evergreen.beans.factory.exception.CreateBeanException;
+import org.evergreen.beans.factory.exception.InjectPropertyException;
 import org.evergreen.beans.utils.BeanNameUtil;
 import org.evergreen.beans.utils.ProxyUtil;
 import org.evergreen.beans.utils.ScanUtil;
@@ -13,7 +16,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,11 +69,11 @@ public abstract class BeanFactory {
         }
     }
 
-    private Class<?> getClass(String className){
+    private Class<?> getClass(String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new BeanDefinitionException("Can not find the class name "+className+" to build the description");
+            throw new BeanDefinitionException("Can not find the class name " + className + " to build the description");
         }
     }
 
@@ -184,31 +186,29 @@ public abstract class BeanFactory {
      * @return
      */
     Object createBean(BeanDefinition definition) {
-        try {
-            // 构建Bean实例
-            Object bean = createInstance(definition);
-            // 为Bean对象执行依赖注入
-            injectProperty(definition.getBeanClass(), bean);
-            return bean;
-        } catch (Exception e) {
-            throw new CreateBeanException("Create bean instance fail.", e);
-        }
+        // 构建Bean实例
+        Object bean = createInstance(definition);
+        // 为Bean对象执行依赖注入
+        injectProperty(definition.getBeanClass(), bean);
+        return bean;
     }
 
     /**
      * 执行注入,当创建代理后要执行依赖注入,由于JDK代理对象不适用于注入, 则如果是JDK代理
      * 这获取回调处理器InvocationHandler当中的目标对象执行注入
      *
-     * @throws SecurityException
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    private void injectProperty(Class<?> beanClass, Object bean)
-            throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
-        bean = getJdkProxyTarget(bean);
-        DependencyInvoker.inject(bean, beanClass, this);
+    private void injectProperty(Class<?> beanClass, Object bean) {
+        try {
+            bean = getJdkProxyTarget(bean);
+            DependencyInvoker.inject(bean, beanClass, this);
+        } catch (NoSuchFieldException e) {
+            throw new InjectPropertyException("Inject property fail.", e);
+        } catch (IllegalAccessException e) {
+            throw new InjectPropertyException("Inject property fail.", e);
+        }
     }
 
     /**
@@ -217,12 +217,10 @@ public abstract class BeanFactory {
      * @param bean
      * @return
      * @throws NoSuchFieldException
-     * @throws SecurityException
-     * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private Object getJdkProxyTarget(Object bean) throws NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
+    private Object getJdkProxyTarget(Object bean)
+            throws NoSuchFieldException, IllegalAccessException {
         if (Proxy.isProxyClass(bean.getClass())) {
             InvocationHandler invocationHandler = Proxy
                     .getInvocationHandler(bean);
@@ -242,17 +240,21 @@ public abstract class BeanFactory {
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
-     * @throws IllegalArgumentException
-     * @throws SecurityException
      * @throws NoSuchFieldException
      */
-    private Object createInstance(BeanDefinition definition)
-            throws InstantiationException, IllegalAccessException,
-            NoSuchFieldException, SecurityException, IllegalArgumentException {
-        Object instance = (definition.isProxy()) ? ProxyUtil.createProxy(definition
-                .getBeanClass()) : definition.getBeanClass().newInstance();
-        executeInitMethods(instance, definition);
-        return instance;
+    private Object createInstance(BeanDefinition definition) {
+        try {
+            Object instance = (definition.isProxy()) ? ProxyUtil.createProxy(definition
+                    .getBeanClass()) : definition.getBeanClass().newInstance();
+            executeInitMethods(instance, definition);
+            return instance;
+        } catch (InstantiationException e) {
+            throw new CreateBeanException("Create bean instance fail.", e);
+        } catch (IllegalAccessException e) {
+            throw new CreateBeanException("Create bean instance fail.", e);
+        } catch (NoSuchFieldException e) {
+            throw new CreateBeanException("Create bean instance fail.", e);
+        }
     }
 
     /**
@@ -344,13 +346,14 @@ public abstract class BeanFactory {
 
     /**
      * 依据beanName获取BeanDefinition
+     *
      * @param beanName
      * @return
      */
-    protected BeanDefinition getBeanDefinition(String beanName){
+    protected BeanDefinition getBeanDefinition(String beanName) {
         BeanDefinition beanDefinition = definitionMap.get(beanName);
         if (beanDefinition == null) {
-            throw new RuntimeException("Can not find bean by " + beanName);
+            throw new BeanDefinitionException("Can not find bean by " + beanName);
         }
         return beanDefinition;
     }
