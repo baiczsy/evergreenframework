@@ -7,6 +7,7 @@ import org.evergreen.beans.factory.exception.BeanDefinitionException;
 import org.evergreen.beans.factory.exception.CreateBeanException;
 import org.evergreen.beans.factory.exception.InjectPropertyException;
 import org.evergreen.beans.utils.BeanNameUtil;
+import org.evergreen.beans.utils.ProxyTargetUtil;
 import org.evergreen.beans.utils.ProxyUtil;
 import org.evergreen.beans.utils.ScanUtil;
 
@@ -56,7 +57,7 @@ public abstract class BeanFactory {
         for (String className : classNames) {
             Class<?> beanClass = getClass(className);
             if (beanClass.isAnnotationPresent(Component.class)) {
-                String beanName = createBeanName(beanClass);
+                String beanName = BeanNameUtil.getBeanName(beanClass);
                 if (definitionMap.containsKey(beanName)) {
                     throw new BeanDefinitionException(
                             "conflicts with existing, non-compatible bean definition of same name and class ["
@@ -158,37 +159,19 @@ public abstract class BeanFactory {
     }
 
     /**
-     * beanName作为容器的key,当Component没有指定名字的时候,默认使用当前的类名作为bean的名字 并将类名的首字母转换成小写
-     *
-     * @param beanClass
-     * @return
+     * 将SingleTon的Bean注册到容器中
      */
-    private String createBeanName(Class<?> beanClass) {
-        Component annotation = beanClass.getAnnotation(Component.class);
-        return ("".equals(annotation.value())) ? BeanNameUtil
-                .toLowerBeanName(beanClass.getSimpleName()) : annotation
-                .value();
-    }
-
-    /**
-     * 将Bean注册到容器中
-     */
-    void registerBeanDefinition(String beanName, BeanDefinition definition) {
-        Object bean = createBean(definition);
+    void registerSingleton(String beanName, BeanDefinition definition) {
+        Object bean = createInstance(definition);
         // 将bean实例放入bean容器中
         beansMap.put(beanName, bean);
     }
 
     /**
-     * 构建bean实例,并根据需要初始化代理 并初始化依赖关系（注入）
-     *
-     * @param definition
-     * @return
+     * 装配原型Bean实例
      */
-    Object createBean(BeanDefinition definition) {
-        // 构建Bean实例
+    protected Object assemblyPrototype(BeanDefinition definition){
         Object bean = createInstance(definition);
-        // 为Bean对象执行依赖注入
         injectProperty(definition.getBeanClass(), bean);
         return bean;
     }
@@ -200,37 +183,15 @@ public abstract class BeanFactory {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    private void injectProperty(Class<?> beanClass, Object bean) {
+    protected void injectProperty(Class<?> beanClass, Object bean) {
         try {
-            bean = getJdkProxyTarget(bean);
+            bean = ProxyTargetUtil.getTarget(bean);
             DependencyInvoker.inject(bean, beanClass, this);
         } catch (NoSuchFieldException e) {
             throw new InjectPropertyException("Inject property fail.", e);
         } catch (IllegalAccessException e) {
             throw new InjectPropertyException("Inject property fail.", e);
         }
-    }
-
-    /**
-     * 获取JDK代理的目标对象
-     *
-     * @param bean
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
-    private Object getJdkProxyTarget(Object bean)
-            throws NoSuchFieldException, IllegalAccessException {
-        if (Proxy.isProxyClass(bean.getClass())) {
-            InvocationHandler invocationHandler = Proxy
-                    .getInvocationHandler(bean);
-            Field field = invocationHandler.getClass().getDeclaredField(
-                    "target");
-            field.setAccessible(true);
-            bean = field.get(invocationHandler);
-            return bean;
-        }
-        return bean;
     }
 
     /**
@@ -242,10 +203,11 @@ public abstract class BeanFactory {
      * @throws InstantiationException
      * @throws NoSuchFieldException
      */
-    private Object createInstance(BeanDefinition definition) {
+    protected Object createInstance(BeanDefinition definition) {
         try {
             Object instance = (definition.isProxy()) ? ProxyUtil.createProxy(definition
                     .getBeanClass()) : definition.getBeanClass().newInstance();
+            //执行初始化方法
             executeInitMethods(instance, definition);
             return instance;
         } catch (InstantiationException e) {
@@ -270,7 +232,7 @@ public abstract class BeanFactory {
     private void executeInitMethods(Object instance, BeanDefinition definition)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
-        instance = getJdkProxyTarget(instance);
+        instance = ProxyTargetUtil.getTarget(instance);
         for (Method method : definition.getInitMethods()) {
             try {
                 method.invoke(instance);
@@ -278,28 +240,6 @@ public abstract class BeanFactory {
                 throw new RuntimeException("Init method callback fail.", e);
             }
         }
-    }
-
-    /**
-     * 获取bean实例
-     *
-     * @param beanName
-     * @return
-     */
-    public Object getBean(String beanName) {
-        return doGetBean(beanName);
-    }
-
-    /**
-     * 获取bean实例(泛型)
-     *
-     * @param beanName
-     * @param clazz
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getBean(String beanName, Class<T> clazz) {
-        return (T) doGetBean(beanName);
     }
 
     /**
@@ -332,7 +272,7 @@ public abstract class BeanFactory {
             try {
                 Object instance = beansMap.get(key);
                 if (instance != null) {
-                    instance = getJdkProxyTarget(instance);
+                    instance = ProxyTargetUtil.getTarget(instance);
                     // 执行销毁前方法
                     for (Method method : definition.getDestroyMethods()) {
                         method.invoke(instance);
@@ -356,6 +296,28 @@ public abstract class BeanFactory {
             throw new BeanDefinitionException("Can not find bean by " + beanName);
         }
         return beanDefinition;
+    }
+
+    /**
+     * 获取bean实例
+     *
+     * @param beanName
+     * @return
+     */
+    public Object getBean(String beanName) {
+        return doGetBean(beanName);
+    }
+
+    /**
+     * 获取bean实例(泛型)
+     *
+     * @param beanName
+     * @param clazz
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(String beanName, Class<T> clazz) {
+        return (T) doGetBean(beanName);
     }
 
     /**

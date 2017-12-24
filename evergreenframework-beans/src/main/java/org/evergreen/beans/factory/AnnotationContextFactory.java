@@ -12,17 +12,28 @@ public class AnnotationContextFactory extends BeanFactory {
 	public AnnotationContextFactory(String path) {
 		super(path);
 		initSingleton();
+		assemblySingletons();
 	}
 
 	/**
-	 * 初始化SINGLETON实例放入bean容器中 立即加载的方式会先初始化所有单例的Bean 并注册到容器中
+	 * 预初始化SINGLETON实例放入bean容器中
 	 */
 	private void initSingleton() {
 		for (String beanName : definitionMap.keySet()) {
 			BeanDefinition definition = definitionMap.get(beanName);
 			if (ScopeType.SINGLETON.equals(definition.getScope())) {
-				registerBeanDefinition(beanName, definition);
+				registerSingleton(beanName, definition);
 			}
+		}
+	}
+
+	/**
+	 * 装配singleton实例
+	 */
+	private void assemblySingletons() {
+		for (String beanName : beansMap.keySet()) {
+			//执行注入
+			injectProperty(definitionMap.get(beanName).getBeanClass(), beansMap.get(beanName));
 		}
 	}
 
@@ -33,11 +44,10 @@ public class AnnotationContextFactory extends BeanFactory {
 	 */
 	protected Object doGetBean(String beanName) {
 		BeanDefinition definition = getBeanDefinition(beanName);
-		if(ScopeType.SINGLETON.equals(definition.getScope())
-				&& beansMap.containsKey(beanName)){
+		if(ScopeType.SINGLETON.equals(definition.getScope())){
 			return beansMap.get(beanName);
 		}
-		return createBean(definition);
+		return assemblyPrototype(definition);
 	}
 
 }

@@ -25,13 +25,15 @@ public class AnnotationBeanFactory extends BeanFactory {
 				return beansMap.get(beanName);
 			} else {
 				synchronized (beansMap) {
-					registerBeanDefinition(beanName, definition);
-					return beansMap.get(beanName);
+					registerSingleton(beanName, definition);
+					Object bean = beansMap.get(beanName);
+					injectProperty(definition.getBeanClass(), bean);
+					return bean;
 				}
 			}
 		} else {
-			//否则以原型的方式创建Bean实例
-			return createBean(definition);
+			//否则以原型的方式装配Bean实例
+			return assemblyPrototype(definition);
 		}
 	}
 
