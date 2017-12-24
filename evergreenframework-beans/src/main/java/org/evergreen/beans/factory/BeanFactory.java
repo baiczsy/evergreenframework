@@ -40,7 +40,6 @@ public abstract class BeanFactory {
 
     /**
      * 在构造方法中初始化并构建所有bean描述
-     *
      * @param path 扫描路径
      */
     public BeanFactory(String path) {
@@ -50,8 +49,7 @@ public abstract class BeanFactory {
 
     /**
      * 解析所有的类名并并检查容器中是否存在当前的Bean描述,如果不存在,构建Bean描述放入容器
-     *
-     * @throws ClassNotFoundException, BeanDefinitionException
+     * @param classNames
      */
     private void initDefinitionMap(Set<String> classNames) {
         for (String className : classNames) {
@@ -70,6 +68,11 @@ public abstract class BeanFactory {
         }
     }
 
+    /**
+     * 获取Class对象
+     * @param className
+     * @return
+     */
     private Class<?> getClass(String className) {
         try {
             return Class.forName(className);
@@ -103,6 +106,8 @@ public abstract class BeanFactory {
 
     /**
      * 为definition设置BeanClass 将当前Bean的class对象保存到描述对象中
+     * @param definition
+     * @param beanClass
      */
     private void setBeanClass(BeanDefinition definition, Class<?> beanClass) {
         definition.setBeanClass(beanClass);
@@ -111,6 +116,8 @@ public abstract class BeanFactory {
     /**
      * 为definition设置Bean的作用域
      * 如果bean的class上指定了Scope注解(也就是容器创建Bean的方式),一并保存Bean的作用域 否则Bean的作用默认创建方式将使用单例
+     * @param definition
+     * @param beanClass
      */
     private void setBeanScope(BeanDefinition definition, Class<?> beanClass) {
         String scope = (beanClass.isAnnotationPresent(Scope.class)) ? beanClass
@@ -120,6 +127,8 @@ public abstract class BeanFactory {
 
     /**
      * 设置是否创建代理
+     * @param definition
+     * @param beanClass
      */
     private void setBeanProxy(BeanDefinition definition, Class<?> beanClass) {
         if (ProxyUtil.hasProxyAnnotation()) {
@@ -138,6 +147,8 @@ public abstract class BeanFactory {
 
     /**
      * 设置Bean的初始化方法
+     * @param definition
+     * @param beanClass
      */
     private void setInitMethods(BeanDefinition definition, Class<?> beanClass) {
         Method[] methods = beanClass.getMethods();
@@ -149,6 +160,8 @@ public abstract class BeanFactory {
 
     /**
      * 设置Bean的销毁方法
+     * @param definition
+     * @param beanClass
      */
     private void setDestroyMethods(BeanDefinition definition, Class<?> beanClass) {
         Method[] methods = beanClass.getMethods();
@@ -160,6 +173,8 @@ public abstract class BeanFactory {
 
     /**
      * 将SingleTon的Bean注册到容器中
+     * @param beanName
+     * @param definition
      */
     void registerSingleton(String beanName, BeanDefinition definition) {
         Object bean = createInstance(definition);
@@ -179,9 +194,8 @@ public abstract class BeanFactory {
     /**
      * 执行注入,当创建代理后要执行依赖注入,由于JDK代理对象不适用于注入, 则如果是JDK代理
      * 这获取回调处理器InvocationHandler当中的目标对象执行注入
-     *
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
+     * @param beanClass
+     * @param bean
      */
     protected void injectProperty(Class<?> beanClass, Object bean) {
         try {
@@ -221,13 +235,12 @@ public abstract class BeanFactory {
 
     /**
      * 执行Bean的初始化方法
-     *
      * @param instance
      * @param definition
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws SecurityException
      * @throws NoSuchFieldException
+     * @throws SecurityException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
      */
     private void executeInitMethods(Object instance, BeanDefinition definition)
             throws NoSuchFieldException, SecurityException,
