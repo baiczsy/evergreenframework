@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.evergreen.web.annotation.RequestMapping;
 import org.evergreen.web.factory.WebAppHandlerFactory;
 import org.evergreen.web.params.ParamInfo;
-import org.evergreen.web.utils.CollectionUtils;
-import org.evergreen.web.utils.ParamNameUtil;
-import org.evergreen.web.utils.ScanUtil;
-import org.evergreen.web.utils.StringUtils;
+import org.evergreen.web.utils.*;
 
 public abstract class FrameworkServlet extends HttpServlet {
 
@@ -32,11 +29,6 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Servlet异步线程池
      */
     protected final static String THREAD_POOL = "org.evergreen.web.ServletBean.threadPool";
-
-    /**
-     * 用于存放所有Action的描述信息
-     */
-    final List<ActionDefinition> definitionList = new ArrayList<ActionDefinition>();
 
     /**
      * Tomcat, Jetty, JBoss, GlassFish 默认Servlet名称
@@ -92,8 +84,8 @@ public abstract class FrameworkServlet extends HttpServlet {
         super.init(config);
         // 初始化不同web容器的默认servlet
         initDefaultServlet(config);
-        // 初始化ActionDefinitions
-        initActionDefinitions(config);
+        //初始化ActionDefinitions
+        initActionDefinitions(config.getServletContext());
         // 初始化action工厂
         initHandlerFactory(config.getServletContext());
         // 初始化线程池
@@ -128,25 +120,13 @@ public abstract class FrameworkServlet extends HttpServlet {
     }
 
     /**
-     * 初始化ActionDefinitions(所有Action的描述定义)
-     *
-     * @param config
+     * 初始化ActionDefinitions
+     * @param servletContext
      */
-    private void initActionDefinitions(ServletConfig config) throws ServletException {
-        // 初始化所有Action的描述定义
-        initDefinitionList(scan());
+    private void initActionDefinitions(ServletContext servletContext){
+        List<ActionDefinition> definitionList = ActionDefinitionUtil.transformDefinitions(ScanUtil.scanPackage());
         // 将所有描述定义存入上下文
-        config.getServletContext().setAttribute(ActionDefinition.DEFINITION,
-                definitionList);
-    }
-
-    /**
-     * 根据路径解析出所有Action的完整类名
-     *
-     * @return 所有控制器的全限定类名
-     */
-    private List<String> scan() {
-        return ScanUtil.scanPackage();
+        servletContext.setAttribute(ActionDefinition.DEFINITION, definitionList);
     }
 
     /**
@@ -159,126 +139,6 @@ public abstract class FrameworkServlet extends HttpServlet {
             servletContext.setAttribute(FrameworkServlet.HANDLER_FACTORY, new WebAppHandlerFactory());
         }
     }
-
-    /**
-     * 将扫描的ClassName解析后存放在Action描述信息的集合中
-     *
-     * @param classesName
-     * @return
-     */
-    private void initDefinitionList(List<String> classesName) throws ServletException {
-        // 遍历扫描的ClassName,创建class对象
-        for (String className : classesName) {
-            Class<?> actionClass = createControllerClass(className);
-            // 获取控制器上定义的url
-            String controllerUrl = getControllerUrl(actionClass);
-            // 获取控制器能支持的请求方法
-            String[] requestMethods = getControllerRequestMethods(actionClass);
-            // 根据class中方法上定义的注解构建ActionDefinition实例
-            for (Method method : actionClass.getMethods()) {
-                // 构建ActionDefinition描述信息
-                ActionDefinition definition = createDefinition(method,
-                        controllerUrl, requestMethods);
-                if (definition != null)
-                    definitionList.add(definition);
-            }
-        }
-    }
-
-    /**
-     * 构建控制器Class实例
-     * @param className
-     * @return
-     * @throws ServletException
-     */
-    private Class<?> createControllerClass(String className) throws ServletException {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new ServletException("Not found controller class: " + className, e);
-        }
-    }
-
-    /**
-     * 获取控制器上定义的url
-     *
-     * @param actionClass
-     * @return
-     */
-    private String getControllerUrl(Class<?> actionClass) {
-        return (actionClass.isAnnotationPresent(RequestMapping.class)) ? actionClass
-                .getAnnotation(RequestMapping.class).value() : "";
-    }
-
-    /**
-     * 获取控制器上标识能处理的请求方法
-     *
-     * @param actionClass
-     * @return
-     */
-    private String[] getControllerRequestMethods(Class<?> actionClass) {
-        return (actionClass.isAnnotationPresent(RequestMapping.class)) ? actionClass
-                .getAnnotation(RequestMapping.class).method() : new String[]{};
-    }
-
-    /**
-     * 构建Action描述定义
-     */
-    private ActionDefinition createDefinition(Method method,
-                                              String controllerUrl, String[] requestMethods) {
-        ActionDefinition definition = null;
-        if (method.isAnnotationPresent(RequestMapping.class)) {
-            RequestMapping annotation = method
-                    .getAnnotation(RequestMapping.class);
-            definition = new ActionDefinition();
-            definition.setControllerUrl(controllerUrl);
-            definition.setActionUrl(annotation.value());
-            definition.setMethod(method);
-            definition.setActionClass(method.getDeclaringClass());
-            definition.setParamInfo(resolveParams(method));
-            // 添加Action能支持的请求方法
-            definition.getRequestMethods().addAll(CollectionUtils.arrayToList(requestMethods));
-            definition.getRequestMethods().addAll(CollectionUtils.arrayToList(annotation.method()));
-        }
-        return definition;
-    }
-
-    /**
-     * 获取回调方法中的所有参数名,参数类型
-     *
-     * @param method
-     */
-    private List<ParamInfo> resolveParams(Method method) {
-        // 获取所有的参数名
-        String[] paramNames = ParamNameUtil.getParamName(method);
-        // 获取所有的参数类型
-        Class<?>[] paramTypes = method.getParameterTypes();
-        // 获取所有参数的注解
-        Annotation[][] annotations = method.getParameterAnnotations();
-        // 构建参数信息集合
-        return getParamInfos(paramNames, paramTypes, annotations);
-
-    }
-
-    /**
-     * 构建参数信息集合
-     */
-    private List<ParamInfo> getParamInfos(String[] paramNames,
-                                          Class<?>[] paramTypes, Annotation[][] annotations) {
-        List<ParamInfo> list = new ArrayList<ParamInfo>();
-        for (int i = 0; i < paramNames.length; i++) {
-            ParamInfo paramInfo = new ParamInfo();
-            // 封装参数名
-            paramInfo.setParamName(paramNames[i]);
-            // 封装参数类型
-            paramInfo.setParamType(paramTypes[i]);
-            // 封装参数注解
-            paramInfo.setAnnotations(annotations[i]);
-            list.add(paramInfo);
-        }
-        return list;
-    }
-
 
     /**
      * 初始化servlet异步线程池
