@@ -29,23 +29,19 @@ public class ContainerHandlerFactory implements HandlerFactory {
      */
     public Object crateAction(ActionDefinition definition) throws ActionException {
         Method method = definition.getMethod();
-        try {
-            String beanName = getBeanName(method);
-            return beanFactory.getBean(beanName);
-        } catch (BeanContainerException e) {
-            throw new TargetActionException("Create target action handler fail.", e);
-        }
+        String beanName = getBeanName(method);
+        return beanFactory.getBean(beanName);
     }
 
     /**
      * 获取@Component注解中的Bean名称
      * @param method
      * @return
-     * @throws BeanContainerException
+     * @throws ActionException
      */
-    protected String getBeanName(Method method) throws BeanContainerException {
+    protected String getBeanName(Method method) throws ActionException{
         if (!method.getDeclaringClass().isAnnotationPresent(Component.class)) {
-            throw new BeanContainerException("Not a container managed bean.");
+            throw new TargetActionException("Target action not a container managed bean.");
         }
         String beanName = method.getDeclaringClass()
                 .getAnnotation(Component.class).value();
