@@ -44,8 +44,9 @@ public class ContainerHandlerFactory implements HandlerFactory {
      * @throws BeanContainerException
      */
     protected String getBeanName(Method method) throws BeanContainerException {
-        if (method.getDeclaringClass().getAnnotation(Component.class) == null)
-            throw new BeanContainerException();
+        if (!method.getDeclaringClass().isAnnotationPresent(Component.class)) {
+            throw new BeanContainerException("Not a container managed bean.");
+        }
         String beanName = method.getDeclaringClass()
                 .getAnnotation(Component.class).value();
         beanName = ("".equals(beanName)) ? BeanNameUtil.toLowerBeanName((method

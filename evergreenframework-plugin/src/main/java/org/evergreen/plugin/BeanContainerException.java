@@ -1,9 +1,16 @@
 package org.evergreen.plugin;
 
-@SuppressWarnings("serial")
-public class BeanContainerException extends Exception {
+public class BeanContainerException extends RuntimeException {
 
-	public BeanContainerException() {
-		super("Not a container managed bean.");
+	public BeanContainerException(String message) {
+		super(message);
+	}
+
+	public BeanContainerException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public BeanContainerException(Throwable cause) {
+		super(cause);
 	}
 }
