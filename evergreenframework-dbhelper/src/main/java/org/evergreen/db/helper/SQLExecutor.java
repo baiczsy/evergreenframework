@@ -2,7 +2,6 @@ package org.evergreen.db.helper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,19 +32,19 @@ public class SQLExecutor {
      * @return
      */
     public <T> T executeQuery(String sql, ResultSetHandler<T> handler,
-                              Object... params) throws SQLException {
+                              Object... params) {
         if (connection == null) {
-            throw new SQLException("Null connection");
+            throw new ExecuteParamsException("Null connection");
         }
 
         if (sql == null) {
             close();
-            throw new SQLException("Null SQL statement");
+            throw new ExecuteParamsException("Null SQL statement");
         }
 
         if (handler == null) {
             close();
-            throw new SQLException("Null ResultSetHandler");
+            throw new ExecuteParamsException("Null ResultSetHandler");
         }
 
         PreparedStatement ps = null;
@@ -57,7 +56,7 @@ public class SQLExecutor {
             rs = ps.executeQuery();
             t = handler.handle(rs);
         } catch (SQLException e) {
-            rethrow(e);
+            throw new DataAccessException(e.getMessage(), e);
         } finally {
             close(rs);
             close(ps);
@@ -75,14 +74,14 @@ public class SQLExecutor {
      * @param params
      * @return
      */
-    public int executeUpdate(String sql, Object... params) throws SQLException {
+    public void executeUpdate(String sql, Object... params) {
         if (connection == null) {
-            throw new SQLException("Null connection");
+            throw new ExecuteParamsException("Null connection");
         }
 
         if (sql == null) {
             close();
-            throw new SQLException("Null SQL statement");
+            throw new ExecuteParamsException("Null SQL statement");
         }
 
         PreparedStatement ps = null;
@@ -90,16 +89,15 @@ public class SQLExecutor {
         try {
             ps = connection.prepareStatement(sql);
             setParameters(ps, params);
-            i = ps.executeUpdate();
+            ps.executeUpdate();
         } catch (SQLException e) {
-            rethrow(e);
+            throw new DataAccessException(e.getMessage(), e);
         } finally {
             close(ps);
             if (autoClose) {
                 close();
             }
         }
-        return i;
     }
 
     /**
@@ -110,35 +108,32 @@ public class SQLExecutor {
      * @return
      * @throws SQLException
      */
-    public int[] executeBatch(String sql, Object[][] params)
-            throws SQLException {
+    public void executeBatch(String sql, Object[][] params) {
         if (connection == null) {
-            throw new SQLException("Null connection");
+            throw new ExecuteParamsException("Null connection");
         }
 
         if (sql == null) {
             close();
-            throw new SQLException("Null SQL statement");
+            throw new ExecuteParamsException("Null SQL statement");
         }
 
         PreparedStatement ps = null;
-        int[] rows = null;
         try {
             ps = connection.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
                 setParameters(ps, params[i]);
                 ps.addBatch();
             }
-            rows = ps.executeBatch();
+            ps.executeBatch();
         } catch (SQLException e) {
-            rethrow(e);
+            throw new DataAccessException(e.getMessage(), e);
         } finally {
             close(ps);
             if (autoClose) {
                 close();
             }
         }
-        return rows;
     }
 
     /**
@@ -148,19 +143,19 @@ public class SQLExecutor {
      * @param params
      * @return
      */
-    public Object insert(String sql, Object... params) throws SQLException {
+    public Object insert(String sql, Object... params) {
         if (connection == null) {
-            throw new SQLException("Null connection");
+            throw new ExecuteParamsException("Null connection");
         }
 
         if (sql == null) {
             close();
-            throw new SQLException("Null SQL statement");
+            throw new ExecuteParamsException("Null SQL statement");
         }
 
         if (!sql.trim().toUpperCase().startsWith("INSERT")) {
             close();
-            throw new SQLException("Not an insert statement");
+            throw new ExecuteParamsException("Not an insert statement");
         }
 
         PreparedStatement ps = null;
@@ -174,7 +169,7 @@ public class SQLExecutor {
                 generatedKey = rs.getObject(1);
             }
         } catch (SQLException e) {
-            rethrow(e);
+            throw new DataAccessException(e.getMessage(), e);
         } finally {
             close(ps);
             if (autoClose) {
@@ -191,19 +186,19 @@ public class SQLExecutor {
      * @param params
      * @return
      */
-    public Object[] insertBatch(String sql, Object[][] params) throws SQLException {
+    public Object[] insertBatch(String sql, Object[][] params) {
         if (connection == null) {
-            throw new SQLException("Null connection");
+            throw new ExecuteParamsException("Null connection");
         }
 
         if (sql == null) {
             close();
-            throw new SQLException("Null SQL statement");
+            throw new ExecuteParamsException("Null SQL statement");
         }
 
         if (!sql.trim().toUpperCase().startsWith("INSERT")) {
             close();
-            throw new SQLException("Not an insert statement");
+            throw new ExecuteParamsException("Not an insert statement");
         }
         PreparedStatement ps = null;
         List generatedKeys = new ArrayList();
@@ -219,8 +214,7 @@ public class SQLExecutor {
                 generatedKeys.add(rs.getObject(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            rethrow(e);
+            throw new DataAccessException(e.getMessage(), e);
         } finally {
             close(ps);
             if (autoClose) {
@@ -252,7 +246,7 @@ public class SQLExecutor {
             connection.setAutoCommit(false);
             autoClose = false;
         } catch (SQLException e) {
-            throw new RuntimeException("Begin transaction fail.", e);
+            throw new TransactionException("Begin transaction fail.", e);
         }
     }
 
@@ -263,7 +257,7 @@ public class SQLExecutor {
         try {
             connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Commit transaction fail.", e);
+            throw new TransactionException("Commit transaction fail.",e);
         } finally {
             close();
         }
@@ -273,7 +267,7 @@ public class SQLExecutor {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            throw new RuntimeException("Rollback transaction fail.", e);
+            throw new TransactionException("Rollback transaction fail.", e);
         } finally {
             close();
         }
@@ -289,7 +283,7 @@ public class SQLExecutor {
             try {
                 rs.close();
             } catch (SQLException e) {
-                throw new RuntimeException("Close resultset fail.", e);
+                throw new CloseResourcesException("Close result set fail.", e);
             }
         }
     }
@@ -304,7 +298,7 @@ public class SQLExecutor {
             try {
                 st.close();
             } catch (SQLException e) {
-                throw new RuntimeException("Close statement fail.", e);
+                throw new CloseResourcesException("Close statement fail.", e);
             }
         }
     }
@@ -318,18 +312,8 @@ public class SQLExecutor {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Close connection fail.", e);
+            throw new CloseResourcesException("Close connection fail.", e);
         }
     }
 
-    /**
-     * 异常重抛
-     */
-    private void rethrow(SQLException cause)
-            throws SQLException {
-        String msg = cause.getMessage() == null ? "" : cause.getMessage();
-        SQLException e = new SQLException(msg, cause.getSQLState(), cause.getErrorCode());
-        e.setNextException(cause);
-        throw e;
-    }
 }
