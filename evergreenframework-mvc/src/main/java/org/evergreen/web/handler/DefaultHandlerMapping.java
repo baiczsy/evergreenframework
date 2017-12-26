@@ -13,12 +13,10 @@ import java.util.List;
  */
 public class DefaultHandlerMapping implements HandlerMapping {
     @Override
-    public ActionMapper handler() {
+    public ActionMapper handler(HttpServletRequest request) {
         ActionMapper mapper = new ActionMapper();
-        HttpServletRequest request = (HttpServletRequest) ActionContext
-                .getContext().get(FrameworkServlet.REQUEST);
         String urlPattern = UrlPatternUtil.getUrlPattern(request);
-        List<ActionDefinition> definitions = getActionDefinitions();
+        List<ActionDefinition> definitions = getActionDefinitions(request);
         boolean isRequestMethod = false;
         boolean isRequestUri = false;
         for (ActionDefinition actionDefinition : definitions) {
@@ -28,7 +26,7 @@ public class DefaultHandlerMapping implements HandlerMapping {
                         request.getMethod())){
                     isRequestMethod = true;
                     // 将请求url和匹配的url放入当前请求作用域,用于后面做restful参数映射
-                    saveRestPath(actionDefinition.getUrlPattern(), urlPattern);
+                    saveRestPath(request, actionDefinition.getUrlPattern(), urlPattern);
                     //将definition对象封装到ActionMapper中并返回
                     mapper.setDefinition(actionDefinition);
                 }
@@ -43,9 +41,7 @@ public class DefaultHandlerMapping implements HandlerMapping {
     /**
      * 获取所有的Action描述定义
      */
-    private List<ActionDefinition> getActionDefinitions(){
-        HttpServletRequest request = (HttpServletRequest) ActionContext
-                .getContext().get(FrameworkServlet.REQUEST);
+    private List<ActionDefinition> getActionDefinitions(HttpServletRequest request){
         List<ActionDefinition> definitions = (List<ActionDefinition>) request
                 .getServletContext().getAttribute(ActionDefinition.DEFINITION);
         return definitions;
@@ -54,8 +50,8 @@ public class DefaultHandlerMapping implements HandlerMapping {
     /**
      * 将请求的url和Annotation上定义的url放入请求作用域, 在参数映射时解析restful参数
      */
-    private void saveRestPath(String destPath, String origPath) {
-        ActionContext.getContext().getRequest().put(FrameworkServlet.DEST_PATH, destPath.split("/"));
-        ActionContext.getContext().getRequest().put(FrameworkServlet.ORIG_PATH, origPath.split("/"));
+    private void saveRestPath(HttpServletRequest request, String destPath, String origPath) {
+        request.setAttribute(FrameworkServlet.DEST_PATH, destPath.split("/"));
+        request.setAttribute(FrameworkServlet.ORIG_PATH, origPath.split("/"));
     }
 }

@@ -64,7 +64,7 @@ public class ActionServlet extends FrameworkServlet {
         // 初始化ActionContext对象
         initActionContext(request, response);
         // 请求映射,找到匹配的Action描述,返回ActionMapping对象
-        ActionMapper mapper = handlerMapping.handler();
+        ActionMapper mapper = handlerMapping.handler(request);
         // 如果mapping没有匹配的Action描述定义来处理请求,则当前请求交给默认servlet处理
         if (mapper.getDefinition() == null) {
             forwardDefaultServlet(request, response);
