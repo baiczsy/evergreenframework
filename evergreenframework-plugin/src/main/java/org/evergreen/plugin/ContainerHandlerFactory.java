@@ -28,25 +28,7 @@ public class ContainerHandlerFactory implements HandlerFactory {
      * @throws ActionException
      */
     public Object crateAction(ActionDefinition definition) throws ActionException {
-        Method method = definition.getMethod();
-        String beanName = getBeanName(method);
+        String beanName = BeanNameUtil.getBeanName(definition.getActionClass());
         return beanFactory.getBean(beanName);
-    }
-
-    /**
-     * 获取@Component注解中的Bean名称
-     * @param method
-     * @return
-     * @throws ActionException
-     */
-    protected String getBeanName(Method method) throws ActionException{
-        if (!method.getDeclaringClass().isAnnotationPresent(Component.class)) {
-            throw new TargetActionException("Target action not a container managed bean.");
-        }
-        String beanName = method.getDeclaringClass()
-                .getAnnotation(Component.class).value();
-        beanName = ("".equals(beanName)) ? BeanNameUtil.toLowerBeanName((method
-                .getDeclaringClass().getSimpleName())) : beanName;
-        return beanName;
     }
 }
