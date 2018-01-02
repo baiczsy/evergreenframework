@@ -26,7 +26,7 @@ class StackBuilder {
     }
 
     /**
-     *  解析Interceptors注解中的切面信息并存入Stack中
+     *  解析Interceptors注解中的切面信息并将通知存入Stack中
      * @param annotation
      * @param stack
      */
@@ -37,9 +37,9 @@ class StackBuilder {
         for (Class<?> aspectClass : inters) {
             //创建切面实例
             Object aspectInstance = newAspectInstance(aspectClass);
-            for (Method method : aspectClass.getMethods()) {
-                if (method.isAnnotationPresent(Around.class)){
-                    AdviceInfo adviceInfo = createAdviceInfo(aspectInstance, method);
+            for (Method advice : aspectClass.getMethods()) {
+                if (advice.isAnnotationPresent(Around.class)){
+                    AdviceInfo adviceInfo = createAdviceInfo(aspectInstance, advice);
                     //将通知描述存入Stack
                     stack.push(adviceInfo);
                 }
