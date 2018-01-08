@@ -1,5 +1,7 @@
 package org.evergreen.web;
 
+import org.evergreen.web.exception.ActionException;
+import org.evergreen.web.exception.RequestMethodException;
 import org.evergreen.web.handler.DefaultHandlerInvoker;
 import org.evergreen.web.handler.DefaultHandlerMapping;
 import org.evergreen.web.view.DefaultViewResult;
@@ -62,7 +64,13 @@ public class ActionServlet extends FrameworkServlet {
         // 初始化ActionContext对象
         initActionContext(request, response);
         // 请求映射,找到匹配的Action描述,返回ActionMapping对象
-        ActionMapper mapper = handlerMapping.handler(request);
+        ActionMapper mapper = null;
+        try {
+            mapper = handlerMapping.handler(request);
+        } catch (RequestMethodException e) {
+            response.sendError(HttpStatus.SC_METHOD_NOT_ALLOWED, e.getMessage());
+            return;
+        }
         // 如果mapping没有匹配的Action描述定义来处理请求,则当前请求交给默认servlet处理
         if (mapper.getDefinition() == null) {
             forwardDefaultServlet(request, response);
