@@ -1,6 +1,5 @@
 package org.evergreen.web;
 
-import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.exception.RequestMethodException;
 import org.evergreen.web.handler.DefaultHandlerInvoker;
 import org.evergreen.web.handler.DefaultHandlerMapping;
