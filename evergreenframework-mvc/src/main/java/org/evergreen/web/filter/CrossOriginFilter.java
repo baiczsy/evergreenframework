@@ -49,6 +49,7 @@ public class CrossOriginFilter implements Filter{
         if(maxAge != null) {
             response.setHeader(MAX_AGE, maxAge);
         }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
