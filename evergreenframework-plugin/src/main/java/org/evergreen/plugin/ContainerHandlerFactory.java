@@ -1,13 +1,10 @@
 package org.evergreen.plugin;
 
-import org.evergreen.beans.annotation.Component;
 import org.evergreen.beans.factory.BeanFactory;
 import org.evergreen.plugin.utils.BeanNameUtil;
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.HandlerFactory;
 import org.evergreen.web.exception.ActionException;
-import org.evergreen.web.exception.TargetActionException;
-import java.lang.reflect.Method;
 
 public class ContainerHandlerFactory implements HandlerFactory {
 
