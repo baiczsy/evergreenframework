@@ -77,9 +77,9 @@ public class ActionServlet extends FrameworkServlet {
             // 执行请求处理服务，并返回试图结果集
             Object viewObject = handlerInvoker.invoke(mapper);
             // 响应视图
-            response(viewObject);
+            responseView(viewObject);
             // 清除ActionContext的本地线程副本
-            destroyActionContext();
+            cleanActionContext();
         }
     }
 
@@ -116,7 +116,7 @@ public class ActionServlet extends FrameworkServlet {
      * @throws ServletException
      * @throws IOException
      */
-    private void response(Object viewObject) throws IOException, ServletException {
+    private void responseView(Object viewObject) throws IOException, ServletException {
         if (viewObject != null) {
             ViewResult viewResult = (viewObject instanceof ViewResult) ? (ViewResult) viewObject
                     : new DefaultViewResult(viewObject);
@@ -127,7 +127,7 @@ public class ActionServlet extends FrameworkServlet {
     /**
      * 清除ActionContext的本地线程副本
      */
-    private void destroyActionContext() {
+    private void cleanActionContext() {
         ActionContext.localContext.remove();
     }
 
