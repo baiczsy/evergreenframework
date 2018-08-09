@@ -5,8 +5,6 @@ import org.evergreen.web.params.ParamInfo;
 import org.evergreen.web.params.converter.ParamsConvertHandler;
 import org.evergreen.web.utils.beanutils.ConvertUtils;
 
-import java.util.Map;
-
 public class BasicConvertHandler extends ParamsConvertHandler {
 
     public Object execute(ParamInfo paramInfo) {
