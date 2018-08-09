@@ -153,7 +153,7 @@ public class SQLExecutor {
             throw new ExecuteParamsException("Null SQL statement");
         }
 
-        if (!sql.trim().toUpperCase().startsWith("INSERT")) {
+        if (!sql.trim().toLowerCase().startsWith("insert")) {
             close();
             throw new ExecuteParamsException("Not an insert statement");
         }
@@ -196,7 +196,7 @@ public class SQLExecutor {
             throw new ExecuteParamsException("Null SQL statement");
         }
 
-        if (!sql.trim().toUpperCase().startsWith("INSERT")) {
+        if (!sql.trim().toLowerCase().startsWith("insert")) {
             close();
             throw new ExecuteParamsException("Not an insert statement");
         }
@@ -283,7 +283,7 @@ public class SQLExecutor {
             try {
                 rs.close();
             } catch (SQLException e) {
-                throw new CloseResourcesException("Close result set fail.", e);
+                throw new CloseResourcesException("Close resultset fail.", e);
             }
         }
     }
