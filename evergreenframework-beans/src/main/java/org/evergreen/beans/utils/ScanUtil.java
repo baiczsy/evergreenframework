@@ -58,18 +58,20 @@ public class ScanUtil {
 		filePath = URLDecoder.decode(filePath, "utf-8");
 		packageName = URLDecoder.decode(packageName, "utf-8");
 		File[] files = new File(filePath).listFiles();
-		packageName = packageName + ".";
-		for (File childFile : files) {
-			if (childFile.isDirectory()) {
-				scanFromDir(childFile.getPath(), packageName + childFile.getName());
-			} else {
-				String fileName = childFile.getName();
-				if (fileName.endsWith(".class")) {
-					if(packageName.charAt(0) == '.'){
-						packageName = packageName.substring(1, packageName.length());
+		if(files != null){
+			packageName = packageName + ".";
+			for (File childFile : files) {
+				if (childFile.isDirectory()) {
+					scanFromDir(childFile.getPath(), packageName + childFile.getName());
+				} else {
+					String fileName = childFile.getName();
+					if (fileName.endsWith(".class")) {
+						if(packageName.charAt(0) == '.'){
+							packageName = packageName.substring(1, packageName.length());
+						}
+						String className = packageName + fileName.replace(".class", "");
+						classNames.add(className);
 					}
-					String className = packageName + fileName.replace(".class", "");
-					classNames.add(className);
 				}
 			}
 		}
