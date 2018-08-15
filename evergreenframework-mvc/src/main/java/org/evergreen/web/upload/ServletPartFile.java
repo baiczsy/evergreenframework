@@ -40,6 +40,10 @@ public class ServletPartFile extends MultipartFile{
 
     @Override
 	public void upload(String uploadPath) throws IOException {
+		File uploadDir = new File(uploadPath);
+		if(!uploadDir.exists()){
+			uploadDir.mkdirs();
+		}
 		part.write(uploadPath + "/" + getFileName());
 	}
 
