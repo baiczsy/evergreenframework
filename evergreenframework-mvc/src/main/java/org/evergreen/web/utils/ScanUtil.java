@@ -62,12 +62,4 @@ public class ScanUtil {
 		}
 	}
 
-
-	public static void main(String[] args) throws Exception {
-		List<String> classNames = scanPackage();
-		for (String className : classNames) {
-			System.out.println(className);
-		}
-	}
-
 }
