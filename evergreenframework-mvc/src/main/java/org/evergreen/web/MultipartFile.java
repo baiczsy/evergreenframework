@@ -8,7 +8,17 @@ import java.io.Serializable;
 public abstract class MultipartFile implements Serializable {
 
 	private static final long serialVersionUID = -558551897462030467L;
-	
+
+	protected String fileName;
+
+	/**
+	 * 设置文件名
+	 * @param fileName
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	/**
 	 * 获取文件大小
 	 * @return
@@ -36,6 +46,6 @@ public abstract class MultipartFile implements Serializable {
 	 * 上传
 	 * @throws IOException
 	 */
-	public abstract void upload(File file) throws IOException;
+	public abstract void upload(String uploadPath) throws IOException;
 
 }

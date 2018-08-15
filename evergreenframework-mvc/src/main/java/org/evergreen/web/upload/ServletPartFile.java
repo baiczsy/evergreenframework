@@ -30,7 +30,7 @@ public class ServletPartFile extends MultipartFile{
 
 	@Override
 	public String getFileName() {
-		return part.getSubmittedFileName();
+		return fileName != null ? fileName : part.getSubmittedFileName();
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class ServletPartFile extends MultipartFile{
     }
 
     @Override
-	public void upload(File file) throws IOException {
-		part.write(file.getPath());
+	public void upload(String uploadPath) throws IOException {
+		part.write(uploadPath + "/" + getFileName());
 	}
 
 }
