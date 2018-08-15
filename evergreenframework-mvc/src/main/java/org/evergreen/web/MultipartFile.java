@@ -8,17 +8,6 @@ import java.io.Serializable;
 public abstract class MultipartFile implements Serializable {
 
 	private static final long serialVersionUID = -558551897462030467L;
-
-	private String fileName;
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public MultipartFile setFileName(String fileName) {
-		this.fileName = fileName;
-		return this;
-	}
 	
 	/**
 	 * 获取文件大小
@@ -31,6 +20,12 @@ public abstract class MultipartFile implements Serializable {
 	 * @return
 	 */
 	public abstract String getContentType();
+
+	/**
+	 * 获取文件名
+	 * @return
+	 */
+	public abstract String getFileName();
 
 	/**
 	 * 获取输入流

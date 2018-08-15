@@ -1,18 +1,16 @@
 package org.evergreen.web.params.converter.handler;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Part;
-
+import org.evergreen.web.MultipartFile;
 import org.evergreen.web.exception.UploadFileException;
 import org.evergreen.web.params.ParamInfo;
 import org.evergreen.web.params.converter.ParamsConvertHandler;
-import org.evergreen.web.MultipartFile;
 import org.evergreen.web.upload.ServletPartFile;
-import org.evergreen.web.utils.MultipartFileUtil;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultipartFileConvertHandler extends ParamsConvertHandler {
 
@@ -37,11 +35,10 @@ public class MultipartFileConvertHandler extends ParamsConvertHandler {
 
 	// 单个附件
 	private MultipartFile buildMultipartFile(String paramName) throws IOException, ServletException {
-		Part part = getRequest().getPart(paramName);
 		MultipartFile multipartFile = null;
+		Part part = getRequest().getPart(paramName);
 		if (part != null) {
-			String fileName = MultipartFileUtil.parseFileName(part.getHeader(CONTENT_DISPOSITION));
-			multipartFile = createPartFile(fileName, part);
+			multipartFile = new ServletPartFile(part);
 		}
 		return multipartFile;
 	}
@@ -52,23 +49,11 @@ public class MultipartFileConvertHandler extends ParamsConvertHandler {
 		List<Part> parts = (List<Part>) getRequest().getParts();
 		List<MultipartFile> newParts = new ArrayList<MultipartFile>();
 		for (Part part : parts) {
-			if (part.getContentType() != null) {
-				String fileName = MultipartFileUtil.parseFileName(part
-						.getHeader(CONTENT_DISPOSITION));
-				if (!"".equals(fileName)) {
-					newParts.add(createPartFile(fileName, part));
-				}
+			if (part.getContentType() != null && !"".equals(part.getSubmittedFileName())) {
+				newParts.add(new ServletPartFile(part));
 			}
 		}
 		return newParts.toArray(new ServletPartFile[0]);
-	}
-
-
-	// 创建ServletPartFile
-	private MultipartFile createPartFile(String fileName, Part part) {
-		MultipartFile filePart = new ServletPartFile(part);
-		filePart.setFileName(fileName);
-		return filePart;
 	}
 
 }

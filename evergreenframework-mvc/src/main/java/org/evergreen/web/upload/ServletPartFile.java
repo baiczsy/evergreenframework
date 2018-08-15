@@ -28,7 +28,12 @@ public class ServletPartFile extends MultipartFile{
 		return part.getContentType();
 	}
 
-    @Override
+	@Override
+	public String getFileName() {
+		return part.getSubmittedFileName();
+	}
+
+	@Override
     public InputStream getInputStream() throws IOException {
         return part.getInputStream();
     }
