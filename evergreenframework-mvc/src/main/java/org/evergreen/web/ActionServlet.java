@@ -44,6 +44,7 @@ public class ActionServlet extends FrameworkServlet {
         initHandlerMapping();
         // 初始化action回调处理器
         initHandlerInvoker();
+        logger.info("ActionServlet has initialized");
     }
 
     /**
@@ -51,7 +52,6 @@ public class ActionServlet extends FrameworkServlet {
      */
     private void initHandlerMapping() {
         handlerMapping = new DefaultHandlerMapping();
-        logger.info("HandlerMapping was initialized.");
     }
 
     /**
@@ -59,7 +59,6 @@ public class ActionServlet extends FrameworkServlet {
      */
     private void initHandlerInvoker() {
         handlerInvoker = new DefaultHandlerInvoker();
-        logger.info("HandlerMapping was initialized.");
     }
 
     /**
@@ -113,7 +112,7 @@ public class ActionServlet extends FrameworkServlet {
         // 构建ServletContext的map代理,放入contextMap中
         contextMap.put(APPLICATION_MAP,
                 new ScopeMapContext(APPLICATION_MAP).createScopeProxyMap());
-        logger.info("ActionContext was initialized.");
+        logger.info("ActionContext has initialized.");
     }
 
     /**

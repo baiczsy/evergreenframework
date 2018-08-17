@@ -127,7 +127,7 @@ public abstract class FrameworkServlet extends HttpServlet {
         List<ActionDefinition> definitionList = ActionDefinitionUtil.transformDefinitions(ScanUtil.scanPackage());
         // 将所有描述定义存入上下文
         servletContext.setAttribute(ActionDefinition.DEFINITION, definitionList);
-        logger.info("Action description definition was initialized.");
+        logger.info("Action description definition has initialized.");
     }
 
     /**
