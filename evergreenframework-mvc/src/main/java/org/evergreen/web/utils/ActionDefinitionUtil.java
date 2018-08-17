@@ -32,10 +32,10 @@ public class ActionDefinitionUtil {
                         controllerUrl, requestMethods);
                 if (definition != null) {
                     definitionList.add(definition);
-                    logger.info(classesName+" -> Description definition initialized.");
                 }
             }
         }
+        logger.info("Description definition initialized.");
         return definitionList;
     }
 

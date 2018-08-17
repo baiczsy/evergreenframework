@@ -62,7 +62,7 @@ public class ActionServlet extends FrameworkServlet {
                            HttpServletResponse response) throws IOException, ServletException {
         // 初始化ActionContext对象
         initActionContext(request, response);
-        // 请求映射,找到匹配的Action描述,返回ActionMapping对象
+        // 请求映射,找到匹配的Action描述,返回ActionMapper对象
         ActionMapper mapper = null;
         try {
             mapper = handlerMapping.handler(request);
@@ -70,7 +70,7 @@ public class ActionServlet extends FrameworkServlet {
             response.sendError(HttpStatus.SC_METHOD_NOT_ALLOWED, e.getMessage());
             return;
         }
-        // 如果mapping没有匹配的Action描述定义来处理请求,则当前请求交给默认servlet处理
+        // 如果ActionMapper没有匹配的Action描述定义来处理请求,则当前请求交给默认servlet处理
         if (mapper.getDefinition() == null) {
             forwardDefaultServlet(request, response);
         } else {
