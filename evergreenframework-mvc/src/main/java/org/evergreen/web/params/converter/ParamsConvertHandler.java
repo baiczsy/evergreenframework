@@ -14,7 +14,7 @@ public abstract class ParamsConvertHandler {
 	protected HttpServletRequest getRequest() {
 		return (HttpServletRequest) ActionContext
 				.getContext().get(FrameworkServlet.REQUEST);
-		
+
 	}
 
 	public abstract Object execute(ParamInfo paramInfo) throws ActionException;

@@ -1,11 +1,13 @@
 package org.evergreen.web;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -335,13 +337,33 @@ public class ActionContext {
 	}
 
 	/**
-	 * 获取Servlet的输入流
+	 * 获取Request的输入流
 	 * @return
 	 * @throws IOException
 	 */
 	public ServletInputStream getInputStream() throws IOException {
 		HttpServletRequest request = (HttpServletRequest) get(FrameworkServlet.REQUEST);
 		return request.getInputStream();
+	}
+
+	/**
+	 * 获取Response的输出流
+	 * @return
+	 * @throws IOException
+	 */
+	public ServletOutputStream getOutputStream() throws IOException {
+		HttpServletResponse response = (HttpServletResponse) get(FrameworkServlet.RESPONSE);
+		return response.getOutputStream();
+	}
+
+	/**
+	 * 获取Response的字符输出流
+	 * @return
+	 * @throws IOException
+	 */
+	public Writer getWriter() throws IOException {
+		HttpServletResponse response = (HttpServletResponse) get(FrameworkServlet.RESPONSE);
+		return response.getWriter();
 	}
 
 	/**
