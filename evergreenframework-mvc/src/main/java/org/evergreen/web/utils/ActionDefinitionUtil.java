@@ -35,7 +35,6 @@ public class ActionDefinitionUtil {
                 }
             }
         }
-        logger.info("Description definition initialized.");
         return definitionList;
     }
 

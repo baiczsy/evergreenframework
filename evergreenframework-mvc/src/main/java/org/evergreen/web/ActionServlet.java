@@ -3,7 +3,10 @@ package org.evergreen.web;
 import org.evergreen.web.exception.RequestMethodException;
 import org.evergreen.web.handler.DefaultHandlerInvoker;
 import org.evergreen.web.handler.DefaultHandlerMapping;
+import org.evergreen.web.utils.ActionDefinitionUtil;
 import org.evergreen.web.view.DefaultViewResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,6 +24,8 @@ public class ActionServlet extends FrameworkServlet {
      *
      */
     private static final long serialVersionUID = 789342728181721564L;
+
+    private final static Logger logger = LoggerFactory.getLogger(ActionServlet.class);
 
     /**
      * 请求映射处理器
@@ -46,6 +51,7 @@ public class ActionServlet extends FrameworkServlet {
      */
     private void initHandlerMapping() {
         handlerMapping = new DefaultHandlerMapping();
+        logger.info("HandlerMapping was initialized.");
     }
 
     /**
@@ -53,6 +59,7 @@ public class ActionServlet extends FrameworkServlet {
      */
     private void initHandlerInvoker() {
         handlerInvoker = new DefaultHandlerInvoker();
+        logger.info("HandlerMapping was initialized.");
     }
 
     /**
@@ -106,6 +113,7 @@ public class ActionServlet extends FrameworkServlet {
         // 构建ServletContext的map代理,放入contextMap中
         contextMap.put(APPLICATION_MAP,
                 new ScopeMapContext(APPLICATION_MAP).createScopeProxyMap());
+        logger.info("ActionContext was initialized.");
     }
 
     /**

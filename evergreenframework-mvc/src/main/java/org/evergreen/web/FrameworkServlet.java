@@ -4,6 +4,8 @@ import org.evergreen.web.factory.WebAppHandlerFactory;
 import org.evergreen.web.utils.ActionDefinitionUtil;
 import org.evergreen.web.utils.ScanUtil;
 import org.evergreen.web.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -20,6 +22,8 @@ import java.util.concurrent.Executors;
 public abstract class FrameworkServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8587584075900996812L;
+
+    private final static Logger logger = LoggerFactory.getLogger(ActionServlet.class);
 
     /**
      * Servlet异步线程池
@@ -123,6 +127,7 @@ public abstract class FrameworkServlet extends HttpServlet {
         List<ActionDefinition> definitionList = ActionDefinitionUtil.transformDefinitions(ScanUtil.scanPackage());
         // 将所有描述定义存入上下文
         servletContext.setAttribute(ActionDefinition.DEFINITION, definitionList);
+        logger.info("Action description definition was initialized.");
     }
 
     /**
