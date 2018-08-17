@@ -4,6 +4,8 @@ import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.annotation.RequestMapping;
 import org.evergreen.web.exception.ActionException;
 import org.evergreen.web.params.ParamInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActionDefinitionUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(ActionDefinitionUtil.class);
 
     public static List<ActionDefinition> transformDefinitions(List<String> classesName){
         List<ActionDefinition> definitionList = new ArrayList<ActionDefinition>();
@@ -26,8 +30,10 @@ public class ActionDefinitionUtil {
                 // 构建ActionDefinition描述信息
                 ActionDefinition definition = createDefinition(method,
                         controllerUrl, requestMethods);
-                if (definition != null)
+                if (definition != null) {
                     definitionList.add(definition);
+                    logger.info(classesName+" -> Description definition initialized.");
+                }
             }
         }
         return definitionList;
