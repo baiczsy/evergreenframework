@@ -3,6 +3,7 @@ package org.evergreen.web.view;
 import org.apache.commons.io.IOUtils;
 import org.evergreen.web.ViewResult;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,22 +15,15 @@ public class Stream extends ViewResult {
 
     private InputStream inputStream;
 
-    private OutputStream outputStream;
-
     public Stream(){
     }
 
-    public Stream(InputStream inputStream, OutputStream outputStream){
+    public Stream(InputStream inputStream){
         this.inputStream = inputStream;
-        this.outputStream = outputStream;
     }
 
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
-    }
-
-    public void setOutputStream(OutputStream outputStream) {
-        this.outputStream = outputStream;
     }
 
     public void setContentType(String contentType){
@@ -66,8 +60,9 @@ public class Stream extends ViewResult {
 
     @Override
     protected void execute() throws IOException {
-        IOUtils.copy(inputStream, outputStream);
+        BufferedOutputStream bos = new BufferedOutputStream(getResponse().getOutputStream());
+        IOUtils.copy(inputStream, bos);
         inputStream.close();
-        outputStream.close();
+        bos.close();
     }
 }

@@ -138,6 +138,7 @@ public abstract class FrameworkServlet extends HttpServlet {
     private void initHandlerFactory(ServletContext servletContext) {
         if (servletContext.getAttribute(FrameworkServlet.HANDLER_FACTORY) == null) {
             servletContext.setAttribute(FrameworkServlet.HANDLER_FACTORY, new WebAppHandlerFactory());
+            logger.info("WebAppHandlerFactory has initialized.");
         }
     }
 

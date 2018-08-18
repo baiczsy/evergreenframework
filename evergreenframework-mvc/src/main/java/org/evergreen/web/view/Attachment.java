@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-
+/**
+ * Created by wangl on 2016/7/26.
+ */
 public class Attachment extends Stream {
 	
 	private File file;
@@ -22,13 +24,13 @@ public class Attachment extends Stream {
 		this.file = file;
 	}
 
+	@Override
 	protected void execute() throws IOException {
 		String fileName = URLEncoder.encode(file.getName(), "UTF-8") + "\"";
 		String disposition = "attachment;filename=\"" + fileName;
 		setHeader("Content-disposition", disposition);
         setContentType("application/octet-stream");
         setInputStream(new BufferedInputStream(new FileInputStream(file)));
-		setOutputStream(new BufferedOutputStream(getResponse().getOutputStream()));
 		super.execute();
 	}
 

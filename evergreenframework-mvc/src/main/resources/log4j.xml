@@ -2,15 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
     <appender name="console" class="org.apache.log4j.ConsoleAppender">
-        <!-- 自定义布局转换参数说明
-                 %d 日期格式
-                 %p 输出级别
-                 %t 输出当先执行线程名
-                 %M 输出当先运行的方法名
-                 %l 输出日志事件的发生位置，包括类名、发生的线程，以及在代码中的行数
-                 %c 输出当前的类名
-                 %m 输出日志内容
-                 %n 换行-->
+
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss} %-5p] - %m%n" />
         </layout>
