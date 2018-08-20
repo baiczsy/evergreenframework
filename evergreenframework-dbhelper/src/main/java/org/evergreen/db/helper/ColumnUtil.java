@@ -1,5 +1,6 @@
 package org.evergreen.db.helper;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLXML;
@@ -57,6 +58,9 @@ public class ColumnUtil {
 
         } else if (propType.equals(Character.TYPE) || propType.equals(Character.class)){
             value = rs.getString(columnName).charAt(0);
+
+        } else if(propType.equals(BigDecimal.class)) {
+            value = rs.getBigDecimal(columnName);
 
         } else if (propType.equals(SQLXML.class)) {
             value = rs.getSQLXML(columnName);
