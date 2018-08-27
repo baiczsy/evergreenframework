@@ -22,22 +22,6 @@ import java.util.Map;
  */
 public class BeanUtil {
 
-    /*private static final Map<Class<?>, Object> primitiveDefaults = new HashMap<Class<?>, Object>();
-
-     *//**
-     * 当数据库取出null值时,给基本数据类型默认值
-     *//*
-    static {
-        primitiveDefaults.put(Integer.TYPE, Integer.valueOf(0));
-        primitiveDefaults.put(Short.TYPE, Short.valueOf((short) 0));
-        primitiveDefaults.put(Byte.TYPE, Byte.valueOf((byte) 0));
-        primitiveDefaults.put(Float.TYPE, Float.valueOf(0f));
-        primitiveDefaults.put(Double.TYPE, Double.valueOf(0d));
-        primitiveDefaults.put(Long.TYPE, Long.valueOf(0L));
-        primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
-        primitiveDefaults.put(Character.TYPE, Character.valueOf((char) 0));
-    }*/
-
     /**
      * 创建Bean实例
      *
@@ -110,9 +94,6 @@ public class BeanUtil {
                     .value() : fieldName;
             if (columnName.equalsIgnoreCase(fieldName)) {
                 Object value = ColumnUtil.columnConvert(rs, columnName, pd.getPropertyType());
-                /*if (value == null && pd.getPropertyType().isPrimitive()) {
-                    value = primitiveDefaults.get(pd.getPropertyType());
-                }*/
                 pd.getWriteMethod().invoke(bean, value);
                 return true;
             }
