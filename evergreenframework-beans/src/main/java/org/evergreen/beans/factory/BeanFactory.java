@@ -153,8 +153,9 @@ public abstract class BeanFactory {
     private void setInitMethods(BeanDefinition definition, Class<?> beanClass) {
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
-            if (method.isAnnotationPresent(PostConstruct.class))
+            if (method.isAnnotationPresent(PostConstruct.class)) {
                 definition.getInitMethods().add(method);
+            }
         }
     }
 
@@ -166,8 +167,9 @@ public abstract class BeanFactory {
     private void setDestroyMethods(BeanDefinition definition, Class<?> beanClass) {
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
-            if (method.isAnnotationPresent(PreDestroy.class))
+            if (method.isAnnotationPresent(PreDestroy.class)) {
                 definition.getDestroyMethods().add(method);
+            }
         }
     }
 
