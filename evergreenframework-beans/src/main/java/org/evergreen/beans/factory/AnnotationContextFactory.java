@@ -42,6 +42,7 @@ public class AnnotationContextFactory extends BeanFactory {
 	 * 如果Bean的BeanDefinition的scope为singleton,则从singletonMap中获取单例
 	 * 否则以原型的方式创建并返回
 	 */
+	@Override
 	protected Object doGetBean(String beanName) {
 		BeanDefinition definition = getBeanDefinition(beanName);
 		if(ScopeType.SINGLETON.equals(definition.getScope())){

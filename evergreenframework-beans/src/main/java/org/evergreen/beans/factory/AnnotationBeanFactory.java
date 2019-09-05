@@ -15,6 +15,7 @@ public class AnnotationBeanFactory extends BeanFactory {
 	/**
 	 * 获取实例(延迟加载)
 	 */
+	@Override
 	protected Object doGetBean(String beanName) {
 		//获取Bean的描述定义
 		BeanDefinition definition = getBeanDefinition(beanName);
