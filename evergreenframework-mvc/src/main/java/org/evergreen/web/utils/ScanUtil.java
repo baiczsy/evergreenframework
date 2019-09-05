@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * class扫描工具
@@ -43,23 +44,22 @@ public class ScanUtil {
 		filePath = URLDecoder.decode(filePath, "utf-8");
 		packageName = URLDecoder.decode(packageName, "utf-8");
 		File[] files = new File(filePath).listFiles();
-		if(files != null){
-			packageName = packageName + ".";
-			for (File childFile : files) {
-				if (childFile.isDirectory()) {
-					scanPackage(childFile.getPath(), packageName + childFile.getName());
-				} else {
-					String fileName = childFile.getName();
-					if (fileName.endsWith(".class")) {
-						if(packageName.charAt(0) == '.'){
-							packageName = packageName.substring(1, packageName.length());
-						}
-						String className = packageName + fileName.replace(".class", "");
-						classNames.add(className);
+		packageName = packageName + ".";
+		for (File childFile : files) {
+			if (childFile.isDirectory()) {
+				scanPackage(childFile.getPath(), packageName + childFile.getName());
+			} else {
+				String fileName = childFile.getName();
+				if (fileName.endsWith(".class")) {
+					if(packageName.charAt(0) == '.'){
+						packageName = packageName.substring(1, packageName.length());
 					}
+					String className = packageName + fileName.replace(".class", "");
+					classNames.add(className);
 				}
 			}
 		}
 	}
 
 }
+
