@@ -1,4 +1,4 @@
-package org.evergreen.aop;
+package org.evergreen.aop.core;
 
 public interface ProxyHandler {
     

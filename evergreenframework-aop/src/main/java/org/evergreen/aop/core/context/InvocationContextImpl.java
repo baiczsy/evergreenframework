@@ -1,6 +1,6 @@
-package org.evergreen.aop.invocation.context;
+package org.evergreen.aop.core.context;
 
-import org.evergreen.aop.InvocationContext;
+import org.evergreen.aop.core.InvocationContext;
 import org.evergreen.aop.annotation.Exclude;
 
 import java.lang.reflect.Method;
