@@ -6,7 +6,6 @@ import java.lang.reflect.Proxy;
 
 import org.evergreen.aop.core.ProxyHandler;
 import org.evergreen.aop.core.context.JdkInvocationContext;
-import org.evergreen.aop.invocation.handler.JdkInvocationHandler;
 
 /**
  * JDK动态代理构建处理器

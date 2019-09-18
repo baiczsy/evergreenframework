@@ -3,7 +3,6 @@ package org.evergreen.aop.core.handler;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.evergreen.aop.core.ProxyHandler;
 import org.evergreen.aop.core.context.CglibInvocationContext;
-import org.evergreen.aop.invocation.handler.CglibInvocationHandler;
 
 import net.sf.cglib.proxy.Enhancer;
 
