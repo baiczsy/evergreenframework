@@ -62,7 +62,7 @@ public class RowProcessor {
 	 * @param rs
 	 */
 	public static Map<String, Object> toMap(ResultSet rs) throws SQLException {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		ResultSetMetaData metaData = rs.getMetaData();
 		for (int i = 1; i <= metaData.getColumnCount(); i++)
 			result.put(metaData.getColumnLabel(i), rs.getObject(i));
