@@ -11,6 +11,7 @@ import java.util.List;
  * class扫描工具
  * Created by wangl on 2017/7/6.
  */
+@Deprecated
 public class ScanUtil {
 
 	private static List<String> classNames = new ArrayList<String>();

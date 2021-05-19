@@ -1,8 +1,10 @@
 package org.evergreen.web;
 
+import io.github.classgraph.ScanResult;
 import org.evergreen.web.factory.WebAppHandlerFactory;
 import org.evergreen.web.utils.ActionDefinitionUtil;
 import org.evergreen.web.utils.ScanUtil;
+import org.evergreen.web.utils.ScanUtils;
 import org.evergreen.web.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +126,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * @param servletContext
      */
     private void initActionDefinitions(ServletContext servletContext){
-        List<ActionDefinition> definitionList = ActionDefinitionUtil.transformDefinitions(ScanUtil.scanPackage());
+        List<ActionDefinition> definitionList = ActionDefinitionUtil.transformDefinitions(ScanUtils.scan(""));
         // 将所有描述定义存入上下文
         servletContext.setAttribute(ActionDefinition.DEFINITION, definitionList);
         logger.info("Action description definition has initialized.");

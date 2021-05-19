@@ -1,15 +1,14 @@
 package org.evergreen.beans.factory;
 
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
 import org.evergreen.beans.annotation.Component;
 import org.evergreen.beans.annotation.Scope;
 import org.evergreen.beans.annotation.ScopeType;
 import org.evergreen.beans.factory.exception.BeanDefinitionException;
 import org.evergreen.beans.factory.exception.CreateBeanException;
 import org.evergreen.beans.factory.exception.InjectPropertyException;
-import org.evergreen.beans.utils.BeanNameUtil;
-import org.evergreen.beans.utils.ProxyTargetUtil;
-import org.evergreen.beans.utils.ProxyUtil;
-import org.evergreen.beans.utils.ScanUtil;
+import org.evergreen.beans.utils.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -43,17 +42,17 @@ public abstract class BeanFactory {
      * @param path 扫描路径
      */
     public BeanFactory(String path) {
-        Set<String> classNames = ScanUtil.scan(path);
-        initDefinitionMap(classNames);
+        ClassInfoList classInfoList = ScanUtils.scan(path);
+        initDefinitionMap(classInfoList);
     }
 
     /**
      * 解析所有的类名并并检查容器中是否存在当前的Bean描述,如果不存在,构建Bean描述放入容器
-     * @param classNames
+     * @param classInfoList
      */
-    private void initDefinitionMap(Set<String> classNames) {
-        for (String className : classNames) {
-            Class<?> beanClass = getClass(className);
+    private void initDefinitionMap(ClassInfoList classInfoList) {
+        for (ClassInfo classInfo : classInfoList) {
+            Class<?> beanClass = classInfo.loadClass(true);
             if (beanClass.isAnnotationPresent(Component.class)) {
                 String beanName = BeanNameUtil.getBeanName(beanClass);
                 if (definitionMap.containsKey(beanName)) {
@@ -65,19 +64,6 @@ public abstract class BeanFactory {
                             createBeanDefinition(beanClass));
                 }
             }
-        }
-    }
-
-    /**
-     * 获取Class对象
-     * @param className
-     * @return
-     */
-    private Class<?> getClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new BeanDefinitionException("Can not find the class name " + className + " to build the description");
         }
     }
 

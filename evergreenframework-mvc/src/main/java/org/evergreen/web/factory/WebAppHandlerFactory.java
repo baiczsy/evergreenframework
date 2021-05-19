@@ -17,6 +17,7 @@ public class WebAppHandlerFactory implements HandlerFactory {
 	 * @throws ActionException
 	 * @throws IOException
 	 */
+	@Override
 	public Object crateAction(ActionDefinition definition) throws ActionException {
 		try {
 			return definition.getActionClass().newInstance();

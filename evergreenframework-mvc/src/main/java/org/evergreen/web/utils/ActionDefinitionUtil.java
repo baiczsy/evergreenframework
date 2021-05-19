@@ -1,5 +1,7 @@
 package org.evergreen.web.utils;
 
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
 import org.evergreen.web.ActionDefinition;
 import org.evergreen.web.annotation.RequestMapping;
 import org.evergreen.web.exception.ActionException;
@@ -16,11 +18,11 @@ public class ActionDefinitionUtil {
 
     private final static Logger logger = LoggerFactory.getLogger(ActionDefinitionUtil.class);
 
-    public static List<ActionDefinition> transformDefinitions(List<String> classesName){
-        List<ActionDefinition> definitionList = new ArrayList<ActionDefinition>();
+    public static List<ActionDefinition> transformDefinitions(ClassInfoList classInfoList){
+        List<ActionDefinition> definitionList = new ArrayList<>();
         // 遍历扫描的ClassName,创建class对象
-        for (String className : classesName) {
-            Class<?> actionClass = createControllerClass(className);
+        for (ClassInfo classInfo : classInfoList) {
+            Class<?> actionClass = classInfo.loadClass(true);
             // 获取控制器上定义的url
             String controllerUrl = getControllerUrl(actionClass);
             // 获取控制器能支持的请求方法
@@ -36,19 +38,6 @@ public class ActionDefinitionUtil {
             }
         }
         return definitionList;
-    }
-
-    /**
-     * 构建控制器Class实例
-     * @param className
-     * @return
-     */
-    private static Class<?> createControllerClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new ActionException("Not found controller class: " + className, e);
-        }
     }
 
     /**

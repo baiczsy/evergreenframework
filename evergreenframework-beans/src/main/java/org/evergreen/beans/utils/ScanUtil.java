@@ -14,6 +14,7 @@ import java.util.jar.JarFile;
  * class扫描工具
  * Created by wangl on 2017/7/6.
  */
+@Deprecated
 public class ScanUtil {
 
 	private static final Set<String> classNames = new HashSet<String>();
