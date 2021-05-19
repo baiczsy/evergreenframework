@@ -23,7 +23,7 @@
         <!-- 项目构建的编码格式 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 统一版本号管理-->
-        <junit.version>4.8.1</junit.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <!-- 依赖配置管理，使用dependencyManagement依赖管理，子模块可按需继承-->
