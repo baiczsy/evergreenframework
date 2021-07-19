@@ -9,6 +9,7 @@ import org.evergreen.db.helper.ResultSetHandler;
 
 public abstract class AbstractListHandler<T> implements ResultSetHandler<List<T>>{
 
+    @Override
     public List<T> handle(ResultSet rs) throws SQLException {
         List<T> rows = new ArrayList<T>();
         while (rs.next()) {
