@@ -14,6 +14,7 @@ public class BeanHandler<T> implements ResultSetHandler<T>{
 		this.type = type;
 	}
 
+	@Override
 	public T handle(ResultSet rs) throws SQLException {
 		return rs.next() ? RowProcessor.toBean(rs, type) : null;
 	}

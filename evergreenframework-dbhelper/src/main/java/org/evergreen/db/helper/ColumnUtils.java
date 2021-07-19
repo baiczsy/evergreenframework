@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Timestamp;
 
-public class ColumnUtil {
+public class ColumnUtils {
 
     /**
      * 处理数据类型的转换

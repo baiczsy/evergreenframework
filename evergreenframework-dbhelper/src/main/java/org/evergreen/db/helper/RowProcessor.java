@@ -25,7 +25,7 @@ public class RowProcessor {
 		Object value = rs.getObject(columnIndex);
 		if(value != null){
 			String columnName = rs.getMetaData().getColumnLabel(columnIndex);
-			value = ColumnUtil.columnConvert(rs, columnName, type);
+			value = ColumnUtils.columnConvert(rs, columnName, type);
 		}
 		return (T) value;
 	}
@@ -39,7 +39,7 @@ public class RowProcessor {
 	 * @throws SQLException
 	 */
 	public static <T> T toBean(ResultSet rs, Class<T> type) throws SQLException {
-		return (T) BeanUtil.createBean(rs, type);
+		return (T) BeanUtils.createBean(rs, type);
 	}
 
 	/**

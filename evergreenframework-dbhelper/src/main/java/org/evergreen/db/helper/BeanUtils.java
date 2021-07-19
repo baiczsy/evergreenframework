@@ -9,18 +9,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.SQLXML;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Bean转换工具,将查询结果集转换成Bean对象
  *
  * @author lenovo
  */
-public class BeanUtil {
+public class BeanUtils {
 
     /**
      * 创建Bean实例
@@ -93,7 +88,7 @@ public class BeanUtil {
             fieldName = (field.isAnnotationPresent(Column.class)) ? field.getAnnotation(Column.class)
                     .value() : fieldName;
             if (columnName.equalsIgnoreCase(fieldName)) {
-                Object value = ColumnUtil.columnConvert(rs, columnName, pd.getPropertyType());
+                Object value = ColumnUtils.columnConvert(rs, columnName, pd.getPropertyType());
                 pd.getWriteMethod().invoke(bean, value);
                 return true;
             }

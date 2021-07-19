@@ -9,6 +9,7 @@ import org.evergreen.db.helper.RowProcessor;
 
 public class MapHandler implements ResultSetHandler<Map<String, Object>> {
 
+	@Override
 	public Map<String, Object> handle(ResultSet rs) throws SQLException {
 		return rs.next() ? RowProcessor.toMap(rs) : null;
 	}

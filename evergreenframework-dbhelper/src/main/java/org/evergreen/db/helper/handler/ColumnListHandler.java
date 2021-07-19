@@ -15,6 +15,7 @@ public class ColumnListHandler<T> extends AbstractListHandler<T>{
 		this.type = type;
 	}
 
+	@Override
 	protected T getRow(ResultSet rs) throws SQLException {
 		return RowProcessor.toValue(rs, columnIndex,type);
 	}
