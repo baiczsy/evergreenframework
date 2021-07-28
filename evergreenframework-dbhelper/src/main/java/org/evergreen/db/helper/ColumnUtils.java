@@ -18,7 +18,7 @@ public class ColumnUtils {
      * @throws SQLException
      */
     public static Object columnConvert(ResultSet rs, String columnName,
-                                Class propType) throws SQLException {
+                                       Class propType) throws SQLException {
 
         if (!propType.isPrimitive() && rs.getObject(columnName) == null) {
             return null;
@@ -29,8 +29,8 @@ public class ColumnUtils {
         if (propType.equals(String.class)) {
             value = rs.getString(columnName);
 
-        } else if(value instanceof String && propType.isEnum()){
-            value = Enum.valueOf(propType, rs.getString(columnName));
+        } else if (value instanceof String && propType.isEnum()) {
+            value = Enum.valueOf(propType.asSubclass(Enum.class), rs.getString(columnName));
 
         } else if (propType.equals(Integer.TYPE)
                 || propType.equals(Integer.class)) {
@@ -56,19 +56,18 @@ public class ColumnUtils {
         } else if (propType.equals(Byte.TYPE) || propType.equals(Byte.class)) {
             value = rs.getByte(columnName);
 
-        } else if (propType.equals(Character.TYPE) || propType.equals(Character.class)){
+        } else if (propType.equals(Character.TYPE) || propType.equals(Character.class)) {
             value = rs.getString(columnName).charAt(0);
 
-        } else if(propType.equals(BigDecimal.class)) {
+        } else if (propType.equals(BigDecimal.class)) {
             value = rs.getBigDecimal(columnName);
 
         } else if (propType.equals(SQLXML.class)) {
             value = rs.getSQLXML(columnName);
 
-        } else {
-            value = rs.getObject(columnName);
+        } else if (rs.getObject(columnName) instanceof java.util.Date) {
             //处理日期类型
-            value = convertDate(value, propType);
+            value = convertDate(rs.getObject(columnName), propType);
 
         }
         return value;
@@ -78,18 +77,16 @@ public class ColumnUtils {
      * 将数据库的日期转换成java中的日期类型
      */
     private static Object convertDate(Object value, Class<?> paramType) {
-        if (value instanceof java.util.Date) {
-            final String type = paramType.getName();
-            if ("java.sql.Date".equals(type)) {
-                value = new java.sql.Date(((java.util.Date) value).getTime());
-            } else if ("java.sql.Time".equals(type)) {
-                value = new java.sql.Time(((java.util.Date) value).getTime());
-            } else if ("java.sql.Timestamp".equals(type)) {
-                Timestamp ts = (Timestamp) value;
-                int nanos = ts.getNanos();
-                value = new java.sql.Timestamp(ts.getTime());
-                ((Timestamp) value).setNanos(nanos);
-            }
+        final String type = paramType.getName();
+        if ("java.sql.Date".equals(type)) {
+            value = new java.sql.Date(((java.util.Date) value).getTime());
+        } else if ("java.sql.Time".equals(type)) {
+            value = new java.sql.Time(((java.util.Date) value).getTime());
+        } else if ("java.sql.Timestamp".equals(type)) {
+            Timestamp ts = (Timestamp) value;
+            int nanos = ts.getNanos();
+            value = new java.sql.Timestamp(ts.getTime());
+            ((Timestamp) value).setNanos(nanos);
         }
         return value;
     }

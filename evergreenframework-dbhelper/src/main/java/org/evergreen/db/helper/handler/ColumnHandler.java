@@ -10,7 +10,7 @@ public class ColumnHandler<T> implements ResultSetHandler<T> {
 
     private int columnIndex;
 
-    public ColumnHandler(int columnIndex, Class<T> type) {
+    public ColumnHandler(int columnIndex) {
         this.columnIndex = columnIndex;
     }
 
