@@ -8,16 +8,14 @@ import org.evergreen.db.helper.RowProcessor;
 public class ColumnListHandler<T> extends AbstractListHandler<T>{
 	
 	private int columnIndex;
-	private Class<T> type;
 
-	public ColumnListHandler(int columnIndex, Class<T> type) {
+	public ColumnListHandler(int columnIndex) {
 		this.columnIndex = columnIndex;
-		this.type = type;
 	}
 
 	@Override
 	protected T getRow(ResultSet rs) throws SQLException {
-		return RowProcessor.toValue(rs, columnIndex,type);
+		return (T) RowProcessor.toValue(rs, columnIndex);
 	}
 
 	

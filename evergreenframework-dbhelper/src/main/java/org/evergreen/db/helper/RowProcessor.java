@@ -20,14 +20,8 @@ public class RowProcessor {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static <T> T toValue(ResultSet rs, int columnIndex, Class<T> type)
-			throws SQLException {
-		Object value = rs.getObject(columnIndex);
-		if(value != null){
-			String columnName = rs.getMetaData().getColumnLabel(columnIndex);
-			value = ColumnUtils.columnConvert(rs, columnName, type);
-		}
-		return (T) value;
+	public static Object toValue(ResultSet rs, int columnIndex) throws SQLException {
+		return rs.getObject(columnIndex);
 	}
 
 	/**
