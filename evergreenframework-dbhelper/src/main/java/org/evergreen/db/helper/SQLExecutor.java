@@ -74,7 +74,7 @@ public class SQLExecutor {
      * @param params
      * @return
      */
-    public void executeUpdate(String sql, Object... params) {
+    public int executeUpdate(String sql, Object... params) {
         if (connection == null) {
             throw new ExecuteParamsException("Null connection");
         }
@@ -85,11 +85,10 @@ public class SQLExecutor {
         }
 
         PreparedStatement ps = null;
-        int i = 0;
         try {
             ps = connection.prepareStatement(sql);
             setParameters(ps, params);
-            ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         } finally {
@@ -108,7 +107,7 @@ public class SQLExecutor {
      * @return
      * @throws SQLException
      */
-    public void executeBatch(String sql, Object[][] params) {
+    public int[] executeBatch(String sql, Object[][] params) {
         if (connection == null) {
             throw new ExecuteParamsException("Null connection");
         }
@@ -125,7 +124,7 @@ public class SQLExecutor {
                 setParameters(ps, params[i]);
                 ps.addBatch();
             }
-            ps.executeBatch();
+            return ps.executeBatch();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         } finally {
@@ -159,18 +158,20 @@ public class SQLExecutor {
         }
 
         PreparedStatement ps = null;
+        ResultSet rs = null;
         Object generatedKey = null;
         try {
             ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             setParameters(ps, params);
             ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
+            rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 generatedKey = rs.getObject(1);
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         } finally {
+            close(rs);
             close(ps);
             if (autoClose) {
                 close();
