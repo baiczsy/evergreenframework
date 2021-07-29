@@ -76,11 +76,10 @@ public class BeanUtils {
             String columnName = pd.getName();
             //根据字段名获取Field对象
             Field field = beanClass.getDeclaredField(columnName);
-            //获取字段上的注解,如果字段名和表的列名一致，则使用字段名
-            //否则使用注解指定的列名
-            columnName = field.isAnnotationPresent(Column.class)
-                    ? field.getAnnotation(Column.class).value()
-                    : columnName;
+            //获取字段上的注解,如果声明了注解，则使用该注解的value作为列名
+            if(field.isAnnotationPresent(Column.class)) {
+                columnName = field.getAnnotation(Column.class).value();
+            }
             return columnName;
         } catch (NoSuchFieldException e) {
             throw new SQLException("Cannot resolve " + pd.getName() + ": " + e.getMessage());
